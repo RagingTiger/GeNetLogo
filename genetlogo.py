@@ -17,30 +17,64 @@ from py4j.java_gateway import JavaGateway
 import deap
 
 # constants
-CMD = ['java', 'INDISIM3Controller']
-TST = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0, 0.50, 0.25, 200.0, 300.0,
-       901200.0, 10.0, 0.040, 3.00, 200)
+PRG = 'INDISIM3Controller'
+TST = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
+       0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
+       0.040, 3.00, 200)
 
-# start JVM
-subprocess.os.chdir('java/')
-jvm = subprocess.Popen(CMD)
 
-# wait
-time.sleep(1)
+# classes
+class JVM(object):
 
-# startup gateway
-gateway = JavaGateway()
+    # constructor
+    def __init__(self, prgpath):
 
-# get function from JVM
-indisim_object = gateway.entry_point
-fit = indisim_object.fitness_function(13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
-                                      0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
-                                      0.040, 3.00, 200)
-# print return value
-print fit[0], fit[1], fit[2]
+        # build command
+        self.cmd = ['java', prgpath]
 
-# close gateway server
-gateway.shutdown()
+    # functions
+    def run_java_code(self, params):
 
-# kill jvm
-jvm.kill()
+        # get fit values
+        fit = self._java_object.fitness_function(*params)
+
+        # print values
+        for val in fit:
+            print val
+
+    # enter method for 'with' statement (see PEP 343)
+    def __enter__(self):
+
+        # start JVM
+        subprocess.os.chdir('java_source/')
+        self._jvm = subprocess.Popen(self.cmd)
+
+        # wait
+        time.sleep(1)
+
+        # startup gateway
+        self._gateway = JavaGateway()
+
+        # get gateway entry point
+        self._java_object = self._gateway.entry_point
+        self.fitness_function = self._java_object.fitness_function
+
+        # finally return self
+        return self
+
+    # exit method for 'with' statement (see PEP 343)
+    def __exit__(self, exception_type, exception_value, traceback):
+
+        # close gateway server
+        self._gateway.shutdown()
+
+        # kill jvm
+        self._jvm.kill()
+
+
+# executable
+if __name__ == '__main__':
+
+    # using with keyword for safe execution
+    with JVM(PRG) as jcode:
+        jcode.run_java_code(TST)
