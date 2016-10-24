@@ -1,9 +1,0 @@
-NetLogo 5.2.1
-October 1, 2015
-NetLogo 5.2
-NetLogo 5.1
-NetLogo 5.0
-NetLogo 4.
-NetLogo 3.
-NetLogo 2.
-NetLogo 1.
