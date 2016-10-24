@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleExecutable</key>
+    <string></string>
+    <key>CFBundleIconFile</key>
+    <string>HDFView.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>org.HDF_Group.HDFView</string>
+    <key>CFBundleName</key>
+    <string>HDFView</string>
+    <key>CFBundleDisplayName</key>
+    <string>HDFView</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>2.11.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>2.11</string>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+            <string>hdf</string>
+            <string>h4</string>
+            <string>hdf4</string>
+            <string>h5</string>
+            <string>hdf5</string>
+        </array>
+        <key>CFBundleTypeIconFile</key>
+        <string>HDFView.icns</string>
+        <key>CFBundleTypeName</key>
+        <string>HDF Files</string>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        </dict>
+    </array>
+    <key>UTExportedTypeDeclarations</key>
+    <dict>
+        <key>UTTypeIdentifier</key>
+        <string>org.HDF_Group.HDFView</string>
+        <key>UTTypeReferenceURL</key>
+        <string>http://www.hdfgroup.org/hdfjava</string>
+    <key>UTTypeDescription</key>
+    <string>HDF Files</string>
+        <key>UTTypeIconFile</key>
+            <array>
+                <string>HDFView.icns</string>
+            </array>
+        <key>UTTypeConformsTo</key>
+            <array>
+                <string>com.apple.package</string>
+            </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+            <key>public.filename-extension</key>
+            <array>
+                <string>hdf</string>
+                <string>h4</string>
+                <string>hdf4</string>
+                <string>h5</string>
+                <string>hdf5</string>
+            </array>
+        </dict>
+    </dict>
+<!--
+    <key>JVMRuntime</key>
+    <string>jre7</string>
+-->
+    <key>JVMMainClassName</key>
+    <string>ncsa.hdf.view.HDFView</string>
+    <key>JVMOptions</key>
+    <array>
+        <string>-Xmx1024m</string>
+        <string>-Djava.library.path=$APP_ROOT/Contents/Resources/lib</string>
+        <string>-Dhdfview.root=$APP_ROOT/Contents/Java</string>
+        <string>-Xdock:icon=$APP_ROOT/Contents/Resources/HDFView.icns</string>
+        <string>-Dapple.laf.useScreenMenuBar=true</string>
+        <string>-Dcom.apple.macos.use-file-dialog-packages=true</string>
+        <string>-Dcom.apple.macos.useScreenMenuBar=true</string>
+        <string>-Dcom.apple.mrj.application.apple.menu.about.name=HDFView</string>
+        <string>-Dcom.apple.smallTabs=true</string>
+        <string>-jar</string>
+        <string>$APP_ROOT/Contents/Java/jhdfview.jar</string>
+    </array>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2006-2014 by The HDF Group. All rights reserved.</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.developer-tools</string>
+</dict>
+</plist>
