@@ -15,5 +15,5 @@ import genalgo
 # executable
 if __name__ == '__main__':
 
-    # using with keyword for safe execution
+    # print
     print 'under construction'

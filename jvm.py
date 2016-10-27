@@ -77,4 +77,5 @@ if __name__ == '__main__':
 
     # using with keyword for safe execution
     with JVM(PRG) as jcode:
+        print 'JVM up!'
         jcode.run_java_code(TST)
