@@ -11,9 +11,20 @@ Description:
 # libraries
 import genalgo
 
+# banner for stdout
+banner = '''
+             _____      _   _      _   _
+            |  __ \    | \ | |    | | | |
+            | |  \/ ___|  \| | ___| |_| |     ___   __ _  ___
+            | | __ / _ \ . ` |/ _ \ __| |    / _ \ / _` |/ _ \\
+            | |_\ \  __/ |\  |  __/ |_| |___| (_) | (_| | (_) |
+             \____/\___\_| \_/\___|\__\_____/\___/ \__, |\___/
+                                                    __/ |
+                                                   |___/
+'''
 
 # executable
 if __name__ == '__main__':
 
     # print
-    print 'under construction'
+    print '{0}'.format(banner)
