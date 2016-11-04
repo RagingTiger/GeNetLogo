@@ -9,7 +9,8 @@ Description:
 '''
 
 # libraries
-import genalgo
+# import genalgo
+import jvm
 
 # banner for stdout
 banner = '''
@@ -28,3 +29,18 @@ if __name__ == '__main__':
 
     # print
     print '{0}'.format(banner)
+
+    # start JVM
+    print 'Starting Java Virtual Machine ...'
+    with jvm.JVM(jvm.PRG) as jcode:
+
+        # ready to rock n roll
+        print 'Virtual Machine Started'
+
+        # get results
+        results = jcode.run_java_code(jvm.TST)
+        print 'Results:'
+        for val in results:
+            print val
+
+    # print 'Starting Genetic Algorithm ...'
