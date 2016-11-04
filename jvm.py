@@ -38,9 +38,8 @@ class JVM(object):
         # get fit values
         fit = self._java_object.fitness_function(*params)
 
-        # print values
-        for val in fit:
-            print val
+        # return values
+        return fit
 
     # enter method for 'with' statement (see PEP 343)
     def __enter__(self):
