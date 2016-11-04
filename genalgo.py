@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 '''
 Author: John D. Anderson
 Email: jander43@vols.utk.edu
@@ -9,22 +11,22 @@ Description:
 
 # libraries
 import random
-import deap
+from deap import creator, base, tools
 import jvm
 
 # creating simulations individual
-deap.creator.create('FitMax', deap.base.Fitness, weights=(1.0,))
-deap.creator.create('SimulationCell', list, fitness=creator.FitMax,
-                    params=dict)
+creator.create('FitMax', base.Fitness, weights=(1.0,))
+creator.create('SimulationCell', list, fitness=creator.FitMax,
+               params=dict)
 
-# crate toolbox
-toolbox = deap.base.Toolbox()
+# create toolbox
+toolbox = base.Toolbox()
 
 # register functions
 toolbox.register('attr_bool', random.randint, 0, 1)
-toolbox.register('simcell', deap.tools.initRepeat, deap.creator.SimulationCell,
+toolbox.register('simcell', tools.initRepeat, creator.SimulationCell,
                  toolbox.attr_bool, 100)
-toolbox.register('population', deap.tools.initRepeat, list, toolbox.simcell)
+toolbox.register('population', tools.initRepeat, list, toolbox.simcell)
 
 
 # define evaluation function
@@ -36,4 +38,4 @@ def eval_fit(individual):
 if __name__ == '__main__':
 
     # print
-    print 'under construction'
+    print 'Starting Genetic Algorithm ...'
