@@ -8,7 +8,7 @@ Description:
     a Java virtual machine as the fitness function.
 Documentation: http://deap.readthedocs.io/en/master/
 Usage:
-    genetalgo <population>
+    genalgo <population>
 '''
 
 # libraries
