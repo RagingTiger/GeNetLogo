@@ -1,2 +1,4 @@
 deap==1.0.2
+decorator==4.0.10
+networkx==1.11
 py4j==0.10.3
