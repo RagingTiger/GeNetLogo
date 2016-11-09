@@ -9,7 +9,7 @@ Description:
 Documentation: http://deap.readthedocs.io/en/master/
 Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
 Usage:
-    genalgo <population> <generations>
+    genalgo onemax <population> <generations>
 '''
 
 # libraries
@@ -19,9 +19,16 @@ import jvm
 
 
 # classes
+class GenAlgo(object):
+    '''
+    Class used as base class by other Genetic Algorithm classes.
+    '''
+
+
 class OneMax(object):
     '''
     Class to demonstrate onemax problem in DEAP.
+    Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
     '''
     # constructor
     def __init__(self, population, generations):
@@ -32,25 +39,25 @@ class OneMax(object):
         self.gensize = generations
 
         # creating simulations individual
-        creator.create('FitMax', base.Fitness, weights=(1.0,))
-        creator.create('SimulationCell', list, fitness=creator.FitMax,
+        creator.create('FitnessMax', base.Fitness, weights=(1.0,))
+        creator.create('Individual', list, fitness=creator.FitnessMax,
                        params=dict)
 
         # register functions
         self.toolbox.register('attr_bool', random.randint, 0, 1)
-        self.toolbox.register('simcell', tools.initRepeat,
-                              creator.SimulationCell, self.toolbox.attr_bool,
+        self.toolbox.register('individual', tools.initRepeat,
+                              creator.Individual, self.toolbox.attr_bool,
                               20)
         self.toolbox.register('population', tools.initRepeat, list,
-                              self.toolbox.simcell)
+                              self.toolbox.individual)
 
         # register genetic operations
-        self.toolbox.register("evaluate", self.eval_fit)
+        self.toolbox.register("evaluate", self.evalOneMax)
         self.toolbox.register("mate", tools.cxTwoPoint)
         self.toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
         self.toolbox.register("select", tools.selTournament, tournsize=3)
 
-    def eval_fit(self, individual):
+    def evalOneMax(self, individual):
         '''
         Function to evaluate fitness of individuals in onemax problem.
         '''
@@ -92,7 +99,10 @@ if __name__ == '__main__':
     # check CLA
     args = docopt(__doc__)
 
-    # print
-    print 'Starting Genetic Algorithm ...'
-    ga = OneMax(int(args['<population>']), int(args['<generations>']))
-    ga.main()
+    # check commands
+    if args['onemax']:
+
+        # print
+        print 'Starting Genetic Algorithm ...'
+        ga = OneMax(int(args['<population>']), int(args['<generations>']))
+        ga.main()
