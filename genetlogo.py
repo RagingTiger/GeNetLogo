@@ -24,6 +24,17 @@ banner = '''
                                                    |___/
 '''
 
+
+# classes
+class GeNetLogo(object):
+    '''
+    Class to apply Genetic Algorithms to NetLogo simulations.
+    '''
+    # constructor
+    def __init__(self):
+        print 'under construction'
+
+
 # executable
 if __name__ == '__main__':
 
