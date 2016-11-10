@@ -10,12 +10,12 @@ Documentation: http://deap.readthedocs.io/en/master/
 Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
 Usage:
     genalgo onemax <population> <generations>
+    genalgo base <population> <generations>
 '''
 
 # libraries
 import random
 from deap import creator, base, tools, algorithms
-import jvm
 
 
 # classes
@@ -23,45 +23,39 @@ class GenAlgo(object):
     '''
     Class used as base class by other Genetic Algorithm classes.
     '''
-
-
-class OneMax(object):
-    '''
-    Class to demonstrate onemax problem in DEAP.
-    Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
-    '''
     # constructor
-    def __init__(self, population, generations):
+    def __init__(self, population, generations, funcname, fitfunc, evalfunc):
 
-        # initialize data
-        self.toolbox = base.Toolbox()
-        self.psize = population
-        self.gensize = generations
+        self.setup = (
+            '# initialize data\n'
+            'self.toolbox = base.Toolbox()\n'
+            'self.psize = {0}\n'
+            'self.gensize = {1}\n'
 
-        # creating simulations individual
-        creator.create('FitnessMax', base.Fitness, weights=(1.0,))
-        creator.create('Individual', list, fitness=creator.FitnessMax,
-                       params=dict)
+            '# creating simulations individual\n'
+            'creator.create(\'{2}\', {3}, weights=(1.0,))\n'
+            'creator.create(\'Individual\', list, fitness=creator.{2},\n'
+            '               params=dict)\n'
 
-        # register functions
-        self.toolbox.register('attr_bool', random.randint, 0, 1)
-        self.toolbox.register('individual', tools.initRepeat,
-                              creator.Individual, self.toolbox.attr_bool,
-                              20)
-        self.toolbox.register('population', tools.initRepeat, list,
-                              self.toolbox.individual)
+            '# register functions\n'
+            'self.toolbox.register(\'attr_bool\', random.randint, 0, 1)\n'
+            'self.toolbox.register(\'individual\', tools.initRepeat,\n'
+            '                      creator.Individual,\n'
+            '                      self.toolbox.attr_bool, 20)\n'
+            'self.toolbox.register(\'population\', tools.initRepeat, list,\n'
+            '                      self.toolbox.individual)\n'
 
-        # register genetic operations
-        self.toolbox.register("evaluate", self.evalOneMax)
-        self.toolbox.register("mate", tools.cxTwoPoint)
-        self.toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
-        self.toolbox.register("select", tools.selTournament, tournsize=3)
+            '# register genetic operations\n'
+            'self.toolbox.register(\'evaluate\', {4})\n'
+            'self.toolbox.register(\'mate\', tools.cxTwoPoint)\n'
+            'self.toolbox.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
+            'self.toolbox.register(\'select\', tools.selTournament,\n'
+            '                      tournsize=3)\n'
+        ).format(population, generations, funcname, fitfunc, evalfunc)
 
-    def evalOneMax(self, individual):
-        '''
-        Function to evaluate fitness of individuals in onemax problem.
-        '''
-        return sum(individual),
+        # compile and execute
+        compiled_setup = compile(self.setup, '<string>', 'exec')
+        exec compiled_setup
 
     def main(self):
         '''
@@ -90,11 +84,31 @@ class OneMax(object):
         print tools.selBest(pop, k=10)
 
 
+class OneMax(GenAlgo):
+    '''
+    Class to demonstrate onemax problem in DEAP.
+    Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
+    '''
+    # constructor
+    def __init__(self, pops, gens):
+        GenAlgo.__init__(self, pops, gens, 'FitnessMax', 'base.Fitness',
+                         'self.evalOneMax')
+
+    def evalOneMax(self, individual):
+        '''
+        Function to evaluate fitness of individuals in onemax problem.
+        '''
+        return sum(individual),
+
+
 # executable
 if __name__ == '__main__':
 
     # exectuable only imports
     from docopt import docopt
+
+    # banner
+    start = '\nStarting Genetic Algorithm ...\n'
 
     # check CLA
     args = docopt(__doc__)
@@ -103,6 +117,15 @@ if __name__ == '__main__':
     if args['onemax']:
 
         # print
-        print 'Starting Genetic Algorithm ...'
+        print start
         ga = OneMax(int(args['<population>']), int(args['<generations>']))
+        ga.main()
+
+    elif args['base']:
+
+        # print
+        print start
+        p = int(args['<population>'])
+        g = int(args['<generations>'])
+        ga = GenAlgo(p, g, 'FitnessMax', 'base.Fitness', 'self.evalOneMax')
         ga.main()
