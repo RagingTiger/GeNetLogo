@@ -82,9 +82,9 @@ class GenAlgo(object):
             pop = self.toolbox.select(offspring, k=len(pop))
 
         # select top 10
-        self.top_most_fit(pop, 10)
+        self.top_fittest(pop, 10)
 
-    def top_most_fit(self, pop, levels):
+    def top_fittest(self, pop, levels):
         '''
         Function print out the top most fit individuals in the population.
         '''
