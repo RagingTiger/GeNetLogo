@@ -93,8 +93,10 @@ class GenAlgo(object):
 
         # print out ranked individuals
         for i, ind in enumerate(tools.selBest(pop, k=levels)):
-            print '#{0}{2}Individual: {1}'.format(i+1, ind,
-                                                  ' '*(5-len(str(i+1))))
+            space = ' '*(4-len(str(i+1)))
+            print ' #{0}{2}Individual: {1}'.format(i+1, ind, space)
+            print '{2}  {0}   - Fitness: {1}'.format(space, ind.fitness.values,
+                                                     ' '*len(str(i+1)))
 
 
 class OneMax(GenAlgo):
