@@ -26,6 +26,7 @@ class GenAlgo(object):
     # constructor
     def __init__(self, population, generations, funcname, fitfunc, evalfunc):
 
+        # meta programming
         self.setup = (
             '# initialize data\n'
             'self.toolbox = base.Toolbox()\n'
@@ -81,7 +82,19 @@ class GenAlgo(object):
             pop = self.toolbox.select(offspring, k=len(pop))
 
         # select top 10
-        print tools.selBest(pop, k=10)
+        self.top_most_fit(pop, 10)
+
+    def top_most_fit(self, pop, levels):
+        '''
+        Function print out the top most fit individuals in the population.
+        '''
+        # print out banner
+        print 'Top {0} Most Fit Inviduals in Population:'.format(levels)
+
+        # print out ranked individuals
+        for i, ind in enumerate(tools.selBest(pop, k=levels)):
+            print '#{0}{2}Individual: {1}'.format(i+1, ind,
+                                                  ' '*(5-len(str(i+1))))
 
 
 class OneMax(GenAlgo):
@@ -91,6 +104,7 @@ class OneMax(GenAlgo):
     '''
     # constructor
     def __init__(self, pops, gens):
+        # call base class constructor
         GenAlgo.__init__(self, pops, gens, 'FitnessMax', 'base.Fitness',
                          'self.evalOneMax')
 
@@ -115,15 +129,11 @@ if __name__ == '__main__':
 
     # check commands
     if args['onemax']:
-
-        # print
         print start
         ga = OneMax(int(args['<population>']), int(args['<generations>']))
         ga.main()
 
     elif args['base']:
-
-        # print
         print start
         p = int(args['<population>'])
         g = int(args['<generations>'])
