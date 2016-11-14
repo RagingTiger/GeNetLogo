@@ -24,7 +24,8 @@ class GenAlgo(object):
     Class used as base class by other Genetic Algorithm classes.
     '''
     # constructor
-    def __init__(self, population, generations, funcname, fitfunc, evalfunc):
+    def __init__(self, population, generations, funcname, fitfunc, args,
+                 evalfunc):
 
         # meta programming
         self.setup = (
@@ -34,12 +35,12 @@ class GenAlgo(object):
             'self.gensize = {1}\n'
 
             '# creating simulations individual\n'
-            'creator.create(\'{2}\', {3}, weights=(1.0,))\n'
-            'creator.create(\'Individual\', list, fitness=creator.{2},\n'
+            'creator.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
+            'creator.create(\'Individual\', list, fitness=creator.FitMax,\n'
             '               params=dict)\n'
 
             '# register functions\n'
-            'self.toolbox.register(\'attr_bool\', random.randint, 0, 1)\n'
+            'self.toolbox.register(\'{2}\', {3}, *{4})\n'
             'self.toolbox.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
             '                      self.toolbox.attr_bool, 20)\n'
@@ -47,12 +48,12 @@ class GenAlgo(object):
             '                      self.toolbox.individual)\n'
 
             '# register genetic operations\n'
-            'self.toolbox.register(\'evaluate\', {4})\n'
+            'self.toolbox.register(\'evaluate\', {5})\n'
             'self.toolbox.register(\'mate\', tools.cxTwoPoint)\n'
             'self.toolbox.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
             'self.toolbox.register(\'select\', tools.selTournament,\n'
             '                      tournsize=3)\n'
-        ).format(population, generations, funcname, fitfunc, evalfunc)
+        ).format(population, generations, funcname, fitfunc, args, evalfunc)
 
         # compile and execute
         compiled_setup = compile(self.setup, '<string>', 'exec')
@@ -107,8 +108,8 @@ class OneMax(GenAlgo):
     # constructor
     def __init__(self, pops, gens):
         # call base class constructor
-        GenAlgo.__init__(self, pops, gens, 'FitnessMax', 'base.Fitness',
-                         'self.evalOneMax')
+        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
+                         (0, 1), 'self.evalOneMax')
 
     def evalOneMax(self, individual):
         '''
@@ -139,5 +140,5 @@ if __name__ == '__main__':
         print start
         p = int(args['<population>'])
         g = int(args['<generations>'])
-        ga = GenAlgo(p, g, 'FitnessMax', 'base.Fitness', 'self.evalOneMax')
+        ga = GenAlgo(p, g, 'attr_bool', 'random.randint', 'self.evalOneMax')
         ga.main()
