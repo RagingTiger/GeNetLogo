@@ -15,6 +15,7 @@ Usage:
 
 # libraries
 import random
+import sys
 from deap import creator, base, tools, algorithms
 
 
@@ -23,6 +24,9 @@ class GenAlgo(object):
     '''
     Class used as base class by other Genetic Algorithm classes.
     Design Patterns: Template Method
+    Reference:
+        "Design Patterns: Elements of Reusable Object-Oriented Software",
+         pages: 325 - 330
     '''
     # constructor
     def __init__(self, population, generations, funcname, fitfunc, args,
@@ -117,6 +121,41 @@ class OneMax(GenAlgo):
         Function to evaluate fitness of individuals in onemax problem.
         '''
         return sum(individual),
+
+
+class Parameters(object):
+    '''
+    Class to generate parameters randomly within a given range and for a
+    specifed type (i.e. float, int).
+    Design Patterns: Template Method, Factory Method
+    Reference:
+        "Design Patterns: Elements of Reusable Object-Oriented Software",
+         pages: 325 - 330
+    '''
+    # constructor
+    def __init__(self, argnames, argrange):
+
+        # check args and argnames
+        if len(argnames) != len(argrange):
+            sys.exit('Check that number of argument names and number of args'
+                     ' are equal!')
+
+        # meta program loop over args
+        self.attrs = ''
+
+        # generate attributes w/values
+        for names, vals in zip(argnames, argrange):
+
+            # check type
+            if type(vals) is int:
+                rval = random.randint(0, vals)
+            elif type(vals) is float:
+                rval = random.uniform(0, vals)
+            else:
+                sys.exit('Arguments can only be int or float')
+
+            # add to meta programming string
+            self.attrs += 'self.{0} = {1}'.format(names, rval)
 
 
 # executable
