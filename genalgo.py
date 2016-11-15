@@ -22,6 +22,7 @@ from deap import creator, base, tools, algorithms
 class GenAlgo(object):
     '''
     Class used as base class by other Genetic Algorithm classes.
+    Design Patterns: Template Method
     '''
     # constructor
     def __init__(self, population, generations, funcname, fitfunc, args,
@@ -87,7 +88,7 @@ class GenAlgo(object):
 
     def top_fittest(self, pop, levels):
         '''
-        Function print out the top most fit individuals in the population.
+        Function to print out the top most fit individuals in the population.
         '''
         # print out banner
         print 'Top {0} Most Fit Inviduals in Population:'.format(levels)
