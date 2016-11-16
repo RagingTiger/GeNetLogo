@@ -20,6 +20,18 @@ from deap import creator, base, tools, algorithms
 
 
 # classes
+class ArgError(Exception):
+    '''
+    Class inheriting from the Exception class that handles any error in the
+    arguments passed to a constructor (see Parameters class below).
+    '''
+    def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return repr(self.value)
+
+
 class GenAlgo(object):
     '''
     Class used as base class by other Genetic Algorithm classes.
@@ -127,18 +139,17 @@ class Parameters(object):
     '''
     Class to generate parameters randomly within a given range and for a
     specifed type (i.e. float, int).
-    Design Patterns: Template Method, Factory Method
+    Design Patterns: "Creational Pattern" (i.e. Builder)
     Reference:
         "Design Patterns: Elements of Reusable Object-Oriented Software",
-         pages: 325 - 330
+         pages: 97 - 106
     '''
     # constructor
-    def __init__(self, argnames, argrange):
+    def __init__(self, argnames, argranges):
 
         # check args and argnames
         if len(argnames) != len(argrange):
-            sys.exit('Check that number of argument names and number of args'
-                     ' are equal!')
+            raise ArgError('Number of arg names and args must be equal!')
 
         # meta program loop over args
         self.attrs = ''
@@ -152,10 +163,14 @@ class Parameters(object):
             elif type(vals) is float:
                 rval = random.uniform(0, vals)
             else:
-                sys.exit('Arguments can only be int or float')
+                raise TypeError('Arguments can only be int or float')
 
             # add to meta programming string
-            self.attrs += 'self.{0} = {1}'.format(names, rval)
+            self.attrs += 'self.{0} = {1}\n'.format(names, rval)
+
+        # compile/execute
+        compiled_attrs = compile(self.attrs, '<string>', 'exec')
+        exec compiled_attrs
 
 
 # executable
