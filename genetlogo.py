@@ -13,6 +13,7 @@ Usage:
 '''
 
 # libraries
+import json
 import genalgo
 import jvm
 
@@ -35,9 +36,10 @@ class GeNetLogo(genalgo.GenAlgo):
     Class to apply Genetic Algorithms to NetLogo simulations.
     '''
     # constructor
-    def __init__(self, funcname, func):
+    def __init__(self, pops, gens, funcname, func, args, evalfunc):
         # call base class constructor
-        GenAlgo.__init__(self, pops, gens, funcname, func, 'self.eval_fit')
+        genalgo.GenAlgo.__init__(self, pops, gens, funcname, func, args,
+                                 evalfunc)
 
     # fitness evaluation function
     def eval_fit(self, individual):
@@ -45,6 +47,20 @@ class GeNetLogo(genalgo.GenAlgo):
         Function to evaluate fitness of individuals for GeNetLogo applications.
         '''
         return sum(individual),
+
+    def fitness_generator(self, start_params):
+        '''
+        Function to take in starting parameters, generate random parameters,
+        and call the fitness function with random parameters.
+        '''
+        # get names and values of arguments
+        argnames, argranges = genalgo.dict_split(start_params)
+
+        # get random parameters
+        randparams = genalgo.RandomParameters(argnames, argranges)
+
+        # check params
+        randparams.dump_dict()
 
 
 # executable
@@ -62,6 +78,7 @@ if __name__ == '__main__':
     # control flow
     if args['test']:
         java_controller = jvm.PRG
+        parameters = '../INDISIM3_Parameters.json'
 
     elif args['run']:
         java_controller = args['<NetLogoJavaController>']
@@ -72,3 +89,9 @@ if __name__ == '__main__':
 
         # launch Genetic Algorithm
         print 'Virtual Machine Started!\nStarting Genetic Algorithm ...'
+        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
+                       'self.eval_fit')
+
+        # open json parameters file
+        with open(parameters, 'r') as params:
+            ga.fitness_generator(json.load(params))
