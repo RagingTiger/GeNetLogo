@@ -164,14 +164,14 @@ class RandomParameters(object):
     def __init__(self, argnames, argranges):
 
         # check args and argnames
-        if len(argnames) != len(argrange):
+        if len(argnames) != len(argranges):
             raise ArgError('Number of arg names and args must be equal!')
 
         # meta program loop over args
-        self.attrs = ''
+        self.params_dict = {}
 
         # generate attributes w/values
-        for names, vals in zip(argnames, argrange):
+        for names, vals in zip(argnames, argranges):
 
             # check type
             if type(vals) is int:
@@ -181,12 +181,16 @@ class RandomParameters(object):
             else:
                 raise TypeError('Arguments can only be int or float')
 
-            # add to meta programming string
-            self.attrs += 'self.{0} = {1}\n'.format(names, rval)
+            # add key/val
+            self.params_dict[names] = float(vals)
 
-        # compile/execute
-        compiled_attrs = compile(self.attrs, '<string>', 'exec')
-        exec compiled_attrs
+    def dump_dict(self):
+        '''
+        Function to dump parameters dictionary.
+        '''
+        # iterate over dict
+        for key, val in self.params_dict.iteritems():
+            print 'Args: {0} | Vals: {1}'.format(key, val)
 
 
 # executable
