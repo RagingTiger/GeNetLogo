@@ -19,22 +19,6 @@ import sys
 from deap import creator, base, tools, algorithms
 
 
-# functions
-def dict_split(params_dict):
-    '''
-    Function to split dictionary into keys and values lists and return them.
-    '''
-    if type(params_dict) is not dict:
-        raise TypeError('Must use dictionary in dict_split()')
-    else:
-        dict_keys = []
-        dict_vals = []
-        for key, val in params_dict.iteritems():
-            dict_keys.append(key)
-            dict_vals.append(val)
-        return dict_keys, dict_vals
-
-
 # classes
 class ArgError(Exception):
     '''
@@ -161,36 +145,47 @@ class RandomParameters(object):
          pages: 97 - 106
     '''
     # constructor
-    def __init__(self, argnames, argranges):
-
-        # check args and argnames
-        if len(argnames) != len(argranges):
-            raise ArgError('Number of arg names and args must be equal!')
+    def __init__(self, arg_dict):
 
         # meta program loop over args
-        self.params_dict = {}
+        self.arg_dict = arg_dict
+        self.randparams_dict = {}
 
         # generate attributes w/values
-        for names, vals in zip(argnames, argranges):
+        for key, val in self.arg_dict.iteritems():
 
             # check type
-            if type(vals) is int:
-                rval = random.randint(0, vals)
-            elif type(vals) is float:
-                rval = random.uniform(0, vals)
+            if type(val) is int:
+                rval = random.randint(0, val)
+            elif type(val) is float:
+                rval = random.uniform(0, val)
             else:
                 raise TypeError('Arguments can only be int or float')
 
             # add key/val
-            self.params_dict[names] = float(vals)
+            self.randparams_dict[key] = float(rval)
 
-    def dump_dict(self):
+    def dump_params(self, params):
         '''
         Function to dump parameters dictionary.
         '''
         # iterate over dict
-        for key, val in self.params_dict.iteritems():
+        for key, val in params.iteritems():
             print 'Args: {0} | Vals: {1}'.format(key, val)
+
+    def print_randparams(self):
+        '''
+        Funciton to print out randomly generated parameters.
+        '''
+        # call self.dump_params()
+        self.dump_params(self.randparams_dict)
+
+    def print_args(self):
+        '''
+        Function to print out original parameter ranges.
+        '''
+        # call self.dump_params()
+        self.dump_params(self.args_dict)
 
 
 # executable
