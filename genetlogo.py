@@ -53,14 +53,11 @@ class GeNetLogo(genalgo.GenAlgo):
         Function to take in starting parameters, generate random parameters,
         and call the fitness function with random parameters.
         '''
-        # get names and values of arguments
-        argnames, argranges = genalgo.dict_split(start_params)
-
         # get random parameters
-        randparams = genalgo.RandomParameters(argnames, argranges)
+        rparams = genalgo.RandomParameters(start_params)
 
         # check params
-        randparams.dump_dict()
+        rparams.print_randparams()
 
 
 # executable
@@ -78,7 +75,7 @@ if __name__ == '__main__':
     # control flow
     if args['test']:
         java_controller = jvm.PRG
-        parameters = '../INDISIM3_Parameters.json'
+        parameters = '../INDISIM3_ParameterRanges.json'
 
     elif args['run']:
         java_controller = args['<NetLogoJavaController>']
