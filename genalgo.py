@@ -135,7 +135,7 @@ class OneMax(GenAlgo):
         return sum(individual),
 
 
-class Parameters(object):
+class RandomParameters(object):
     '''
     Class to generate parameters randomly within a given range and for a
     specifed type (i.e. float, int).
