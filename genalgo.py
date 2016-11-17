@@ -19,6 +19,22 @@ import sys
 from deap import creator, base, tools, algorithms
 
 
+# functions
+def dict_split(params_dict):
+    '''
+    Function to split dictionary into keys and values lists and return them.
+    '''
+    if type(params_dict) is not dict:
+        raise TypeError('Must use dictionary in dict_split()')
+    else:
+        dict_keys = []
+        dict_vals = []
+        for key, val in params_dict.iteritems():
+            dict_keys.append(key)
+            dict_vals.append(val)
+        return dict_keys, dict_vals
+
+
 # classes
 class ArgError(Exception):
     '''
