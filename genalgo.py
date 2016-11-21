@@ -60,7 +60,7 @@ class GenAlgo(object):
             'self.toolbox.register(\'{2}\', {3}, *{4})\n'
             'self.toolbox.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
-            '                      self.toolbox.attr_bool, 20)\n'
+            '                      self.toolbox.{2}, 20)\n'
             'self.toolbox.register(\'population\', tools.initRepeat, list,\n'
             '                      self.toolbox.individual)\n'
 
