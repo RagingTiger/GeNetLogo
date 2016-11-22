@@ -14,13 +14,13 @@ import subprocess
 import time
 
 # 3rd party libraries
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters
 
 # constants
 PRG = 'INDISIM3Controller'
-TST = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
-       0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
-       0.040, 3.00, 200)
+TST_TUPLE = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
+             0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
+             0.040, 3.00, 200)
 
 
 # classes
@@ -36,10 +36,7 @@ class JVM(object):
     def run_java_code(self, params):
 
         # get fit values
-        fit = self._java_object.fitness_function(*params)
-
-        # return values
-        return fit
+        return self._java_object.fitness_function(*params)
 
     # enter method for 'with' statement (see PEP 343)
     def __enter__(self):
@@ -52,7 +49,8 @@ class JVM(object):
         time.sleep(1)
 
         # startup gateway
-        self._gateway = JavaGateway()
+        params = GatewayParameters(auto_convert=True)
+        self._gateway = JavaGateway(gateway_parameters=params)
 
         # get gateway entry point
         self._java_object = self._gateway.entry_point
@@ -77,4 +75,6 @@ if __name__ == '__main__':
     # using with keyword for safe execution
     with JVM(PRG) as jcode:
         print 'JVM up!'
-        jcode.run_java_code(TST)
+        fit = jcode.run_java_code(TST_TUPLE)
+        for item in fit:
+            print item
