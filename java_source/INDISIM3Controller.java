@@ -17,7 +17,7 @@ public class INDISIM3Controller {
     // fitness function for use in genetic algorithm
     public static double[] fitness_function(double init_bact1,
                                double init_bact2, double init_loc_nutr,
-                               double yield, double mass_repr, double avail_k,
+                               double yield_1, double mass_repr, double avail_k,
                                double inhib_k, double uptake_k, double maint,
                                double viabil, double fed_nutr,
                                double out_res_nutr, double len_time_fed,
