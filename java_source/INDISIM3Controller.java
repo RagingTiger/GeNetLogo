@@ -2,6 +2,16 @@
 // Author: John D. Anderson
 // Email: jander43@vols.utk.edu
 
+// original args:
+// double init_bact1,
+// double init_bact2, double init_loc_nutr,
+// double yield_1, double mass_repr, double avail_k,
+// double inhib_k, double uptake_k, double maint,
+// double viabil, double fed_nutr,
+// double out_res_nutr, double len_time_fed,
+// double in_out_percnt, double yield_2,
+// int ticks
+
 // libraries
 import py4j.GatewayServer;
 import org.nlogo.headless.HeadlessWorkspace;
