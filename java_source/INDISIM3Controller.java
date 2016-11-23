@@ -26,7 +26,7 @@ public class INDISIM3Controller {
     }
 
     // fitness function for use in genetic algorithm
-    public static double[] fitness_function(HashMap<String, Double> pydict) {
+    public static double[] fitness_function(HashMap<String, Float> pydict) {
 
       // setting up new workspace for "headless" NetLogo simulation
       HeadlessWorkspace workspace = HeadlessWorkspace.newInstance() ;
@@ -144,25 +144,25 @@ public class INDISIM3Controller {
             // execute if "-m" flag present
             if (comp == 0) {
               // get new hashmap
-              HashMap<String, Double> dict = new HashMap<String, Double>();
+              HashMap<String, Float> dict = new HashMap<String, Float>();
 
               // fill hashmap
-              dict.put("init_bact1", new Double(1.0));
-              dict.put("init_bact2", new Double(25.0));
-              dict.put("init_loc_nutr", new Double(500.0));
-              dict.put("yield_1", new Double(1.80));
-              dict.put("mass_repr", new Double(50.0));
-              dict.put("avail_k", new Double(0.5));
-              dict.put("inhib_k", new Double(0.0));
-              dict.put("uptake_k", new Double(0.50));
-              dict.put("maint", new Double(0.25));
-              dict.put("viabil", new Double(200.0));
-              dict.put("fed_nutr", new Double(300.0));
-              dict.put("out_res_nutr", new Double(901200.0));
-              dict.put("len_time_fed", new Double(10.0));
-              dict.put("in_out_percnt", new Double(0.040));
-              dict.put("yield_2", new Double(3.00));
-              dict.put("ticks", new Double(200));
+              dict.put("init_bact1", new Float(1.0));
+              dict.put("init_bact2", new Float(25.0));
+              dict.put("init_loc_nutr", new Float(500.0));
+              dict.put("yield_1", new Float(1.80));
+              dict.put("mass_repr", new Float(50.0));
+              dict.put("avail_k", new Float(0.5));
+              dict.put("inhib_k", new Float(0.0));
+              dict.put("uptake_k", new Float(0.50));
+              dict.put("maint", new Float(0.25));
+              dict.put("viabil", new Float(200.0));
+              dict.put("fed_nutr", new Float(300.0));
+              dict.put("out_res_nutr", new Float(901200.0));
+              dict.put("len_time_fed", new Float(10.0));
+              dict.put("in_out_percnt", new Float(0.040));
+              dict.put("yield_2", new Float(3.00));
+              dict.put("ticks", new Float(200));
 
               // call fitness function
               double[] values = fitness_function(dict);
