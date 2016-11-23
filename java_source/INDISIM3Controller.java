@@ -13,6 +13,7 @@
 // int ticks
 
 // libraries
+import java.util.*;
 import py4j.GatewayServer;
 import org.nlogo.headless.HeadlessWorkspace;
 
@@ -25,14 +26,7 @@ public class INDISIM3Controller {
     }
 
     // fitness function for use in genetic algorithm
-    public static double[] fitness_function(double init_bact1,
-                               double init_bact2, double init_loc_nutr,
-                               double yield_1, double mass_repr, double avail_k,
-                               double inhib_k, double uptake_k, double maint,
-                               double viabil, double fed_nutr,
-                               double out_res_nutr, double len_time_fed,
-                               double in_out_percnt, double yield_2,
-                               int ticks) {
+    public static double[] fitness_function(HashMap<String, Double> pydict) {
 
       // setting up new workspace for "headless" NetLogo simulation
       HeadlessWorkspace workspace = HeadlessWorkspace.newInstance() ;
@@ -44,51 +38,55 @@ public class INDISIM3Controller {
 
         // strings to be passed to NetLogo
         String set_initial_bact1 = String.format("set initial_bacteria_1 %3f",
-                                                  init_bact1);
+                                                  pydict.get("init_bact1"));
 
         String set_initial_bact2 = String.format("set initial_bacteria_2 %3f",
-                                                  init_bact2);
+                                                  pydict.get("init_bact2"));
 
         String set_initial_local_nutrient = String.format(
                                             "set initial_local_nutrient %3f",
-                                            init_loc_nutr);
+                                            pydict.get("init_loc_nutr"));
 
-        String set_yield = String.format("set yield %3f", yield);
+        String set_yield = String.format("set yield %3f",
+                                         pydict.get("yield_1"));
 
         String set_mass_reproduction = String.format(
                                        "set mass_reproduction %3f",
-                                       mass_repr);
+                                       pydict.get("mass_repr"));
 
         String set_availability_k = String.format("set availability_k %3f",
-                                                  avail_k);
+                                                  pydict.get("avail_k"));
 
         String set_inhibitory_k = String.format("set inhibitory_k %3f",
-                                                inhib_k);
+                                                pydict.get("inhib_k"));
 
-        String set_uptake_k = String.format("set uptake_k %3f", uptake_k);
+        String set_uptake_k = String.format("set uptake_k %3f",
+                                            pydict.get("uptake_k"));
 
         String set_maintenance_k = String.format("set maintenance_k %3f",
-                                                 maint);
+                                                 pydict.get("maint"));
 
         String set_viability_time = String.format("set viability_time %3f",
-                                                  viabil);
+                                                  pydict.get("viabil"));
 
         String set_fed_nutrient = String.format("set fed_nutrient %3f",
-                                                fed_nutr);
+                                                pydict.get("fed_nutr"));
 
         String set_out_reservoir_nutrient = String.format(
                                             "set out_reservoir_nutrient %3f",
-                                            out_res_nutr);
+                                            pydict.get("out_res_nutr"));
 
         String set_length_time_feed = String.format("set length_time_feed %3f",
-                                                    len_time_fed);
+                                                    pydict.get("len_time_fed"));
 
         String set_in_out_percent = String.format("set in_out_percent %3f",
-                                                  in_out_percnt);
+                                                  pydict.get("in_out_percnt"));
 
-        String set_yield_2 = String.format("set yield-2 %3f", yield_2);
+        String set_yield_2 = String.format("set yield-2 %3f",
+                                           pydict.get("yield_2"));
 
-        String repeatgo = repeatgo = String.format("repeat %d [ go ]", ticks);
+        String repeatgo = repeatgo = String.format("repeat %f [ go ]",
+                                                   pydict.get("ticks"));
 
         // setting up initial values for parameters
         workspace.command("setup");
@@ -145,10 +143,29 @@ public class INDISIM3Controller {
 
             // execute if "-m" flag present
             if (comp == 0) {
-              double[] values = fitness_function(1.0, 25.0, 500.0, 1.80, 50.0,
-                                0.5, 0.0, 0.50, 0.25, 200.0, 300.0, 901200.0,
-                                10.0, 0.040, 3.00, 200);
+              // get new hashmap
+              HashMap<String, Double> dict = new HashMap<String, Double>();
 
+              // fill hashmap
+              dict.put("init_bact1", new Double(1.0));
+              dict.put("init_bact2", new Double(25.0));
+              dict.put("init_loc_nutr", new Double(500.0));
+              dict.put("yield_1", new Double(1.80));
+              dict.put("mass_repr", new Double(50.0));
+              dict.put("avail_k", new Double(0.5));
+              dict.put("inhib_k", new Double(0.0));
+              dict.put("uptake_k", new Double(0.50));
+              dict.put("maint", new Double(0.25));
+              dict.put("viabil", new Double(200.0));
+              dict.put("fed_nutr", new Double(300.0));
+              dict.put("out_res_nutr", new Double(901200.0));
+              dict.put("len_time_fed", new Double(10.0));
+              dict.put("in_out_percnt", new Double(0.040));
+              dict.put("yield_2", new Double(3.00));
+              dict.put("ticks", new Double(200));
+
+              // call fitness function
+              double[] values = fitness_function(dict);
               // check to see if an error occured
               if (values.length == 1) {
                 System.exit(-1);
