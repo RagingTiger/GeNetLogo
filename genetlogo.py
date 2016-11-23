@@ -54,8 +54,13 @@ class GeNetLogo(genalgo.GenAlgo):
         and call the fitness function with random parameters.
         '''
         # get random parameters
-        return genalgo.RandomParameters(start_params).randparams_dict
+        rparams = genalgo.RandomParameters(start_params)
 
+        # dumpt params
+        rparams.print_randparams()
+
+        # return dict
+        return rparams.randparams_dict
 
 
 # executable
