@@ -14,6 +14,7 @@
   "length_time_feed": 50,
   "in_out_percnt": 0.100,
   "initial_bacteria_2": 50,
-  "yield-2": 3.00
+  "yield-2": 3.00,
+  "ticks": 1000
 
 }
