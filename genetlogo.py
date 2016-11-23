@@ -54,10 +54,8 @@ class GeNetLogo(genalgo.GenAlgo):
         and call the fitness function with random parameters.
         '''
         # get random parameters
-        rparams = genalgo.RandomParameters(start_params)
+        return genalgo.RandomParameters(start_params).randparams_dict
 
-        # check params
-        rparams.print_randparams()
 
 
 # executable
@@ -91,4 +89,6 @@ if __name__ == '__main__':
 
         # open json parameters file
         with open(parameters, 'r') as params:
-            ga.fitness_generator(json.load(params))
+            pdict = ga.fitness_generator(json.load(params))
+            for val in jcode.run_java_code(pdict):
+                print val
