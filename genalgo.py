@@ -169,9 +169,16 @@ class RandomParameters(object):
         '''
         Function to dump parameters dictionary.
         '''
+        # NOTE: refactor for function factory
+        # print border
+        print '-'*80
+
         # iterate over dict
         for key, val in params.iteritems():
             print 'Args: {0} | Vals: {1}'.format(key, val)
+
+        # print border
+        print '-'*80
 
     def print_randparams(self):
         '''
