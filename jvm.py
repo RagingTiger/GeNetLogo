@@ -12,6 +12,7 @@ Description:
 # libraries
 import subprocess
 import time
+import json
 
 # 3rd party libraries
 from py4j.java_gateway import JavaGateway, GatewayParameters
@@ -36,7 +37,7 @@ class JVM(object):
     def run_java_code(self, params):
 
         # get fit values
-        return self._java_object.fitness_function(*params)
+        return self._java_object.fitness_function(params)
 
     # enter method for 'with' statement (see PEP 343)
     def __enter__(self):
@@ -75,6 +76,7 @@ if __name__ == '__main__':
     # using with keyword for safe execution
     with JVM(PRG) as jcode:
         print 'JVM up!'
-        fit = jcode.run_java_code(TST_TUPLE)
-        for item in fit:
-            print item
+        with open('../INDISIM3_ParameterRanges.json', 'r') as params:
+            fit = jcode.run_java_code(json.load(params))
+            for item in fit:
+                print item
