@@ -9,6 +9,7 @@ Description:
     in an effort to find the maximum/minimum value.
 Usage:
     genetlogo run <NetLogoJavaController>
+    genetlogo test random
     genetlogo test
 '''
 
@@ -48,19 +49,30 @@ class GeNetLogo(genalgo.GenAlgo):
         '''
         return sum(individual),
 
-    def fitness_generator(self, start_params):
+    def fitness_generator(self, start_params, random=False):
         '''
         Function to take in starting parameters, generate random parameters,
         and call the fitness function with random parameters.
         '''
-        # get random parameters
-        rparams = genalgo.RandomParameters(start_params)
+        if random:
+            # get random parameters
+            randparams = genalgo.RandomParameters(start_params)
 
-        # dumpt params
-        rparams.print_randparams()
+            # dumpt params
+            randparams.print_randparams()
+
+            # get params
+            params = randparams.randparams_dict
+
+        else:
+            # non random params
+            params = start_params
+
+            # print params
+            genalgo.pretty_print(params=params)
 
         # return dict
-        return rparams.randparams_dict
+        return params
 
 
 # executable
@@ -78,7 +90,20 @@ if __name__ == '__main__':
     # control flow
     if args['test']:
         java_controller = jvm.PRG
-        parameters = '../INDISIM3_ParameterRanges.json'
+        parameters = 'INDISIM3_ParameterRanges.json'
+
+        # genetlogo object
+        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
+                       'self.eval_fit')
+
+        if args['random']:
+            # open json parameters file
+            with open(parameters, 'r') as params:
+                pdict = ga.fitness_generator(json.load(params), random=True)
+
+        else:
+            pdict = ga.fitness_generator(jvm.TST_DICT)
+
 
     elif args['run']:
         java_controller = args['<NetLogoJavaController>']
@@ -89,11 +114,10 @@ if __name__ == '__main__':
 
         # launch Genetic Algorithm
         print 'Virtual Machine Started!\nStarting Genetic Algorithm ...'
-        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
-                       'self.eval_fit')
 
-        # open json parameters file
-        with open(parameters, 'r') as params:
-            pdict = ga.fitness_generator(json.load(params))
-            for val in jcode.run_java_code(pdict):
-                print val
+        # print results
+        print 'Fitness Results:{0}'.format('\n')
+
+        # NOTE: need to refactor with closure
+        for val in jcode.fitness_function(pdict):
+            print '{0}{1} {2}{3}'.format(' '*2, '*', val, '\n')
