@@ -19,6 +19,31 @@ import sys
 from deap import creator, base, tools, algorithms
 
 
+# functions
+def dump_params(params):
+    '''
+    Function to dump parameters dictionary.
+    '''
+    # iterate over dict
+    for key, val in params.iteritems():
+        print 'Args: {0} | Vals: {1}'.format(key, val)
+
+
+# closures
+def pretty_print(func=dump_params, **kwargs):
+    '''
+    Closure for creating stdout template.
+    '''
+    # print border
+    print '-'*80
+
+    # call func
+    func(**kwargs)
+
+    # print border
+    print '-'*80
+
+
 # classes
 class ArgError(Exception):
     '''
@@ -165,34 +190,19 @@ class RandomParameters(object):
             # add key/val
             self.randparams_dict[key] = float(rval)
 
-    def dump_params(self, params):
-        '''
-        Function to dump parameters dictionary.
-        '''
-        # NOTE: refactor for function factory
-        # print border
-        print '-'*80
-
-        # iterate over dict
-        for key, val in params.iteritems():
-            print 'Args: {0} | Vals: {1}'.format(key, val)
-
-        # print border
-        print '-'*80
-
     def print_randparams(self):
         '''
         Funciton to print out randomly generated parameters.
         '''
         # call self.dump_params()
-        self.dump_params(self.randparams_dict)
+        pretty_print(params=self.randparams_dict)
 
     def print_args(self):
         '''
         Function to print out original parameter ranges.
         '''
         # call self.dump_params()
-        self.dump_params(self.args_dict)
+        pretty_print(params=self.args_dict)
 
 
 # executable
