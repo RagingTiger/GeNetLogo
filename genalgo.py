@@ -172,37 +172,45 @@ class RandomParameters(object):
     # constructor
     def __init__(self, arg_dict):
 
-        # meta program loop over args
-        self.arg_dict = arg_dict
-        self.randparams_dict = {}
+        # store ranges
+        self._range_dict = arg_dict
+
+    def get_rparams(self):
+        '''
+        Function to return random parameters.
+        '''
+        # init dict
+        rand_params = {}
 
         # generate attributes w/values
-        for key, val in self.arg_dict.iteritems():
+        for key, val in self._range_dict.iteritems():
 
             # check type
-            if type(val) is int:
-                rval = random.randint(0, val)
-            elif type(val) is float:
-                rval = random.uniform(0, val)
+            if all(isinstance(item, int) or
+               isinstance(item, float) for item in val):
+                rval = random.uniform(val[0], val[1])
             else:
                 raise TypeError('Arguments can only be int or float')
 
             # add key/val
-            self.randparams_dict[key] = float(rval)
+            rand_params[key] = float(rval)
 
-    def print_randparams(self):
+        # return random parameters
+        return rand_params
+
+    def print_randparams(self, randparams):
         '''
         Funciton to print out randomly generated parameters.
         '''
         # call self.dump_params()
-        pretty_print(params=self.randparams_dict)
+        pretty_print(params=randparams)
 
     def print_args(self):
         '''
         Function to print out original parameter ranges.
         '''
         # call self.dump_params()
-        pretty_print(params=self.args_dict)
+        pretty_print(params=self._range_dict)
 
 
 # executable
