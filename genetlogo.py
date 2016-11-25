@@ -9,7 +9,7 @@ Description:
     in an effort to find the maximum/minimum value.
 Usage:
     genetlogo run <NetLogoJavaController>
-    genetlogo test random
+    genetlogo test random <parameters>
     genetlogo test
 '''
 
@@ -58,11 +58,11 @@ class GeNetLogo(genalgo.GenAlgo):
             # get random parameters
             randparams = genalgo.RandomParameters(start_params)
 
-            # dumpt params
-            randparams.print_randparams()
-
             # get params
-            params = randparams.randparams_dict
+            params = randparams.get_rparams()
+
+            # print  randparams
+            randparams.print_randparams(params)
 
         else:
             # non random params
@@ -90,7 +90,6 @@ if __name__ == '__main__':
     # control flow
     if args['test']:
         java_controller = jvm.PRG
-        parameters = 'INDISIM3_ParameterRanges.json'
 
         # genetlogo object
         ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
@@ -98,12 +97,10 @@ if __name__ == '__main__':
 
         if args['random']:
             # open json parameters file
-            with open(parameters, 'r') as params:
+            with open(args['<parameters>'], 'r') as params:
                 pdict = ga.fitness_generator(json.load(params), random=True)
-
         else:
             pdict = ga.fitness_generator(jvm.TST_DICT)
-
 
     elif args['run']:
         java_controller = args['<NetLogoJavaController>']
