@@ -2,11 +2,14 @@
 '''
 Author: John D. Anderson
 Email: jander43@vols.utk.edu
-Program: jvm
 Description:
     This module opens a Java virtual machine with code specified by user to
     be accessed as a fitness function in genetic algorithm application for
     NetLogo.
+Usage:
+    jvm run <java_classpath>
+    jvm test
+
 '''
 
 # libraries
@@ -15,10 +18,10 @@ import time
 import json
 
 # 3rd party libraries
-from py4j.java_gateway import JavaGateway, GatewayParameters
+from py4j.java_gateway import JavaGateway, GatewayParameters, launch_gateway
 
 # constants
-PRG = 'INDISIM3Controller'
+PRG = '/java_source/INDISIM3Controller.java'
 TST_TUPLE = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
              0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
              0.040, 3.00, 200)
@@ -45,30 +48,15 @@ TST_DICT = {
 }
 
 
+# NOTE: Refactor with 'launch_gateway()'
 # classes
 class JVM(object):
 
     # constructor
     def __init__(self, prgpath):
 
-        # build command
-        self.cmd = ['java', prgpath]
-
-    # functions
-    def run_java_code(self, params):
-
-        # get fit values
-        return self._java_object.fitness_function(params)
-
-    # enter method for 'with' statement (see PEP 343)
-    def __enter__(self):
-
-        # start JVM
-        subprocess.os.chdir('java_source/')
-        self._jvm = subprocess.Popen(self.cmd)
-
-        # wait
-        time.sleep(1)
+        # start jvm
+        self.process = launch_gateway(classpath=prgpath, die_on_exit=True)
 
         # startup gateway
         params = GatewayParameters(auto_convert=True)
@@ -78,25 +66,43 @@ class JVM(object):
         self._java_object = self._gateway.entry_point
         self.fitness_function = self._java_object.fitness_function
 
-        # finally return self
-        return self
+    # functions
+    def run_java_code(self, params):
 
-    # exit method for 'with' statement (see PEP 343)
-    def __exit__(self, exception_type, exception_value, traceback):
+        # get fit values
+        return self.fitness_function(params)
 
-        # close gateway server
-        self._gateway.shutdown()
+    def print_return(self, params):
 
-        # kill jvm
-        self._jvm.kill()
+        # get values
+        values = self.run_java_code(params)
+
+        # print
+        for val in values:
+            print val
 
 
 # executable
 if __name__ == '__main__':
 
-    # using with keyword for safe execution
-    with JVM(PRG) as jcode:
-        print 'JVM up!'
-        fit = jcode.run_java_code(TST_DICT)
-        for item in fit:
-            print item
+    # executable import only
+    from docopt import docopt
+
+    # check CLA
+    args = docopt(__doc__)
+
+    # control flow
+    if args['run']:
+
+        # run code
+        code = JVM(args['<java_classpath>'])
+
+        code.print_return(TST_DICT)
+
+    elif args['test']:
+
+        # test code
+        test = JVM(PRG)
+
+        # print test
+        test.print_return(TST_DICT)
