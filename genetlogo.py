@@ -3,7 +3,6 @@
 '''
 Author: John D. Anderson
 Email: jander43@vols.utk.edu
-Program: genetlogo
 Description:
     This program searches a combination space of NetLogo simulation parameters
     in an effort to find the maximum/minimum value.
