@@ -34,6 +34,7 @@ public class INDISIM3Controller {
       // beginning actual API interface
       try {
         // open NetLogo model
+        // NOTE: needs to be refactored with ABSOLUTE PATH
         workspace.open("NetLogo_Model/" + "INDISIM3.nlogo");
 
         // strings to be passed to NetLogo
