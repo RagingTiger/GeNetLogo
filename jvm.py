@@ -21,11 +21,7 @@ import json
 from py4j.java_gateway import JavaGateway, GatewayParameters, launch_gateway
 
 # constants
-PRG = '/java_source/INDISIM3Controller.java'
-TST_TUPLE = (13.0, 12.0, 500.0, 1.80, 50.0, 0.5, 0.0,
-             0.50, 0.25, 200.0, 300.0, 901200.0, 10.0,
-             0.040, 3.00, 200)
-
+PRG = '/java_source INDISIM3Controller'
 TST_DICT = {
 
   "init_bact1": 1.0,
@@ -56,7 +52,7 @@ class JVM(object):
     def __init__(self, prgpath):
 
         # start jvm
-        self.process = launch_gateway(classpath=prgpath, die_on_exit=True)
+        self.pid = launch_gateway(classpath=prgpath, die_on_exit=True)
 
         # startup gateway
         params = GatewayParameters(auto_convert=True)
