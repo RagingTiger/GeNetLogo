@@ -52,7 +52,8 @@ class JVM(object):
     def __init__(self, prgpath):
 
         # start jvm
-        self.pid = launch_gateway(classpath=prgpath, die_on_exit=True)
+        self.port = launch_gateway(classpath=prgpath, die_on_exit=True,
+                                   port=25333)
 
         # startup gateway
         params = GatewayParameters(auto_convert=True)
