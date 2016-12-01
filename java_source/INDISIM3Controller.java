@@ -35,7 +35,7 @@ public class INDISIM3Controller {
       try {
         // open NetLogo model
         // NOTE: needs to be refactored with ABSOLUTE PATH
-        workspace.open("NetLogo_Model/" + "INDISIM3.nlogo");
+        workspace.open("java_source/NetLogo_Model/" + "INDISIM3.nlogo");
 
         // strings to be passed to NetLogo
         String set_initial_bact1 = String.format("set initial_bacteria_1 %3f",
