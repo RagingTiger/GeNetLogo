@@ -55,10 +55,6 @@ class JVM(object):
         # build command
         command = ['java', '-classpath', prgpath, prgname]
 
-        # check for kill command
-        if kill_on_exit:
-            command.append('--die-on-broken-pipe')
-
         # start jvm
         self.process = subprocess.Popen(command)
 
