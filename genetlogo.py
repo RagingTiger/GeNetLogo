@@ -88,7 +88,8 @@ if __name__ == '__main__':
 
     # control flow
     if args['test']:
-        java_controller = jvm.PRG
+        progpath = jvm.PRGPATH
+        progname = jvm.PRGNAME
 
         # genetlogo object
         ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
@@ -106,7 +107,7 @@ if __name__ == '__main__':
 
     # start JVM
     print 'Starting Java Virtual Machine ...'
-    with jvm.JVM(java_controller) as jcode:
+    with jvm.JVM(progpath, progname) as jcode:
 
         # launch Genetic Algorithm
         print 'Virtual Machine Started!\nStarting Genetic Algorithm ...'
