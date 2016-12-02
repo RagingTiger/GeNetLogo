@@ -9,7 +9,6 @@ Description:
 Usage:
     jvm run <java_classpath>
     jvm test
-
 '''
 
 # libraries
@@ -53,11 +52,22 @@ class JVM(object):
     def __init__(self, prgpath, prgname, kill_on_exit=True):
 
         # build command
-        command = ['java', '-classpath', prgpath, prgname]
+        self.command = ['java', '-classpath', prgpath, prgname]
 
-        # start jvm
-        self.process = subprocess.Popen(command)
+    # functions
+    def print_fitness(self, params):
 
+        # get fit values
+        for val in self._java_object.fitness_function(params):
+            print '{0}'.format(val)
+
+    # enter method for 'with' statement (see PEP 343)
+    def __enter__(self):
+
+        # start JVM
+        self.process = subprocess.Popen(self.command)
+
+        # wait
         time.sleep(1)
 
         # startup gateway
@@ -68,20 +78,17 @@ class JVM(object):
         self._java_object = self._gateway.entry_point
         self.fitness_function = self._java_object.fitness_function
 
-    # functions
-    def run_java_code(self, params):
+        # finally return self
+        return self
 
-        # get fit values
-        return self.fitness_function(params)
+    # exit method for 'with' statement (see PEP 343)
+    def __exit__(self, exception_type, exception_value, traceback):
 
-    def print_return(self, params):
+        # close gateway server
+        self._gateway.shutdown()
 
-        # get values
-        values = self.run_java_code(params)
-
-        # print
-        for val in values:
-            print val
+        # kill jvm
+        self.process.kill()
 
 
 # executable
@@ -95,16 +102,12 @@ if __name__ == '__main__':
 
     # control flow
     if args['run']:
-
-        # run code
-        code = JVM(args['<java_classpath>'])
-
-        code.print_return(TST_DICT)
+        pass
 
     elif args['test']:
 
         # test code
-        test = JVM(PRGPATH, PRGNAME)
+        with JVM(PRGPATH, PRGNAME) as javacode:
 
-        # print test
-        test.print_return(TST_DICT)
+            # run test
+            javacode.print_fitness(TST_DICT)
