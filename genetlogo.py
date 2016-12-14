@@ -7,8 +7,8 @@ Description:
     This program searches a combination space of NetLogo simulation parameters
     in an effort to find the maximum/minimum value.
 Usage:
-    genetlogo run <NetLogoJavaController>
-    genetlogo test random <parameters>
+    genetlogo run <NetLogoJavaControllerPath> <ParametersFile.json>
+    genetlogo test random <ParametersFile.json>
     genetlogo test
 '''
 
@@ -103,7 +103,17 @@ if __name__ == '__main__':
             pdict = ga.fitness_generator(jvm.TST_DICT)
 
     elif args['run']:
-        java_controller = args['<NetLogoJavaController>']
+
+        # get program path and prgram name
+        progpath, progname = args['<NetLogoJavaControllerPath>'].rsplit('/', 1)
+
+        # genetlogo object
+        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
+                       'self.eval_fit')
+
+        # open json parameters file
+        with open(args['<ParametersFile.json>'], 'r') as params:
+                pdict = ga.fitness_generator(json.load(params), random=True)
 
     # start JVM
     print 'Starting Java Virtual Machine ...'
