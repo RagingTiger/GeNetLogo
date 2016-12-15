@@ -92,8 +92,8 @@ if __name__ == '__main__':
         progname = jvm.PRGNAME
 
         # genetlogo object
-        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
-                       'self.eval_fit')
+        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', 'self.eval_fit',
+                       (0, 1))
 
         if args['random']:
             # open json parameters file
@@ -108,8 +108,8 @@ if __name__ == '__main__':
         progpath, progname = args['<NetLogoJavaControllerPath>'].rsplit('/', 1)
 
         # genetlogo object
-        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', (0, 1),
-                       'self.eval_fit')
+        ga = GeNetLogo(10, 10, 'attr_bool', 'random.randint', 'self.eval_fit',
+                       (0, 1))
 
         # open json parameters file
         with open(args['<ParametersFile.json>'], 'r') as params:
