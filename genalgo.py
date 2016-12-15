@@ -10,7 +10,6 @@ Documentation: http://deap.readthedocs.io/en/master/
 Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
 Usage:
     genalgo onemax <population> <generations>
-    genalgo base <population> <generations>
 '''
 
 # libraries
@@ -66,8 +65,8 @@ class GenAlgo(object):
          pages: 325 - 330
     '''
     # constructor
-    def __init__(self, population, generations, funcname, fitfunc, args,
-                 evalfunc):
+    def __init__(self, population, generations, funcname, fitfunc, evalfunc,
+                 args=(), indidividual_attrs=(), repeat_func=1):
 
         # meta programming
         self.setup = (
@@ -79,13 +78,13 @@ class GenAlgo(object):
             '# creating simulations individual\n'
             'creator.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
             'creator.create(\'Individual\', list, fitness=creator.FitMax,\n'
-            '               params=dict)\n'
+            '               *{6})\n'
 
             '# register functions\n'
             'self.toolbox.register(\'{2}\', {3}, *{4})\n'
             'self.toolbox.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
-            '                      self.toolbox.{2}, 20)\n'
+            '                      self.toolbox.{2}, {7})\n'
             'self.toolbox.register(\'population\', tools.initRepeat, list,\n'
             '                      self.toolbox.individual)\n'
 
@@ -95,7 +94,8 @@ class GenAlgo(object):
             'self.toolbox.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
             'self.toolbox.register(\'select\', tools.selTournament,\n'
             '                      tournsize=3)\n'
-        ).format(population, generations, funcname, fitfunc, args, evalfunc)
+        ).format(population, generations, funcname, fitfunc, args, evalfunc,
+                 indidividual_attrs, repeat_func)
 
         # compile and execute
         compiled_setup = compile(self.setup, '<string>', 'exec')
@@ -151,7 +151,7 @@ class OneMax(GenAlgo):
     def __init__(self, pops, gens):
         # call base class constructor
         GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
-                         (0, 1), 'self.evalOneMax')
+                         'self.evalOneMax', (0, 1), repeat_func=20)
 
     def evalOneMax(self, individual):
         '''
@@ -229,11 +229,4 @@ if __name__ == '__main__':
     if args['onemax']:
         print start
         ga = OneMax(int(args['<population>']), int(args['<generations>']))
-        ga.main()
-
-    elif args['base']:
-        print start
-        p = int(args['<population>'])
-        g = int(args['<generations>'])
-        ga = GenAlgo(p, g, 'attr_bool', 'random.randint', 'self.evalOneMax')
         ga.main()
