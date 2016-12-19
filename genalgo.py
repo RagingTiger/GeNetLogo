@@ -148,8 +148,13 @@ class OneMax(GenAlgo):
     # constructor
     def __init__(self, pops, gens):
         # call base class constructor
-        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
-                         'self.evalOneMax', (0, 1), repeat_func=20)
+        # GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
+        #                  'self.evalOneMax', (0, 1), repeat_func=20)
+
+        self._init_data(pops, gens)
+        self._create_individuals(())
+        self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
+        self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
         '''
