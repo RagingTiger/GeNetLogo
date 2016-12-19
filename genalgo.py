@@ -69,36 +69,74 @@ class GenAlgo(object):
                  args=(), indidividual_attrs=(), repeat_func=1):
 
         # meta programming
-        self.setup = (
-            '# initialize data\n'
+        self._init_data(population, generations)
+        self._create_individuals(indidividual_attrs)
+        self._register_functions(funcname, fitfunc, args, repeat_func)
+        self._register_genops(evalfunc)
+
+    def _init_data(self, pop, gen):
+        '''
+        Private method to initialize 'toolbox' data
+        '''
+        # initialize data
+        data = (
             'self.toolbox = base.Toolbox()\n'
             'self.psize = {0}\n'
             'self.gensize = {1}\n'
+        ).format(pop, gen)
 
-            '# creating simulations individual\n'
+        # compile + execute
+        compiled_setup = compile(data, '<string>', 'exec')
+        exec compiled_setup
+
+    def _create_individuals(self, attrs):
+        '''
+        Private method to create unique individuals
+        '''
+        # creating simulations individual
+        individuals = (
             'creator.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
             'creator.create(\'Individual\', list, fitness=creator.FitMax,\n'
-            '               *{6})\n'
+            '               *{0})\n'
+        ).format(attrs)
 
-            '# register functions\n'
-            'self.toolbox.register(\'{2}\', {3}, *{4})\n'
+        # compile + execute
+        compiled_setup = compile(individuals, '<string>', 'exec')
+        exec compiled_setup
+
+    def _register_functions(self, funcname, fitfunc, args, repeat):
+        '''
+        Private method to register functions
+        '''
+        # register functions
+        functions = (
+            'self.toolbox.register(\'{0}\', {1}, *{2})\n'
             'self.toolbox.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
-            '                      self.toolbox.{2}, {7})\n'
+            '                      self.toolbox.{0}, {3})\n'
             'self.toolbox.register(\'population\', tools.initRepeat, list,\n'
             '                      self.toolbox.individual)\n'
+        ).format(funcname, fitfunc, args, repeat)
 
-            '# register genetic operations\n'
-            'self.toolbox.register(\'evaluate\', {5})\n'
+        # compile + execute
+        compiled_setup = compile(functions, '<string>', 'exec')
+        exec compiled_setup
+
+    def _register_genops(self, evalfunc):
+        '''
+        Private method to register genetic operations
+        '''
+        # register genetic operations
+        genops = (
+            'self.toolbox.register(\'evaluate\', {0})\n'
             'self.toolbox.register(\'mate\', tools.cxTwoPoint)\n'
             'self.toolbox.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
             'self.toolbox.register(\'select\', tools.selTournament,\n'
             '                      tournsize=3)\n'
-        ).format(population, generations, funcname, fitfunc, args, evalfunc,
-                 indidividual_attrs, repeat_func)
+        ).format(evalfunc)
 
-        # compile and execute
-        compiled_setup = compile(self.setup, '<string>', 'exec')
+        # compile + execute
+        compiled_setup = compile(genops, '<string>', 'exec')
         exec compiled_setup
 
 
