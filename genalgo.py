@@ -101,6 +101,24 @@ class GenAlgo(object):
         compiled_setup = compile(self.setup, '<string>', 'exec')
         exec compiled_setup
 
+
+class OneMax(GenAlgo):
+    '''
+    Class to demonstrate onemax problem in DEAP.
+    Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
+    '''
+    # constructor
+    def __init__(self, pops, gens):
+        # call base class constructor
+        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
+                         'self.evalOneMax', (0, 1), repeat_func=20)
+
+    def evalOneMax(self, individual):
+        '''
+        Function to evaluate fitness of individuals in onemax problem.
+        '''
+        return sum(individual),
+
     def main(self):
         '''
         Function to run Genetic Algorithm.
@@ -140,24 +158,6 @@ class GenAlgo(object):
             print ' #{0}{2}Individual: {1}'.format(i+1, ind, space)
             print '{2}  {0}   - Fitness: {1}'.format(space, ind.fitness.values,
                                                      ' '*len(str(i+1)))
-
-
-class OneMax(GenAlgo):
-    '''
-    Class to demonstrate onemax problem in DEAP.
-    Attribution: http://deap.readthedocs.io/en/master/examples/ga_onemax.html
-    '''
-    # constructor
-    def __init__(self, pops, gens):
-        # call base class constructor
-        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
-                         'self.evalOneMax', (0, 1), repeat_func=20)
-
-    def evalOneMax(self, individual):
-        '''
-        Function to evaluate fitness of individuals in onemax problem.
-        '''
-        return sum(individual),
 
 
 class RandomParameters(object):
