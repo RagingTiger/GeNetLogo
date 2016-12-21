@@ -56,6 +56,18 @@ class ArgError(Exception):
         return repr(self.value)
 
 
+class EvalFunc(object):
+    pass
+
+
+class FitFunc(object):
+    pass
+
+
+class IndividualAttrs(object):
+    pass
+
+
 class GenAlgo(object):
     '''
     Class used as base class by other Genetic Algorithm classes.
