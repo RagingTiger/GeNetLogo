@@ -68,17 +68,19 @@ class IndividualAttrs(object):
     pass
 
 
-class GenAlgo(object):
+class GenAlgo(base.Toolbox):
     '''
-    Class used as base class by other Genetic Algorithm classes.
-    Design Patterns: Template Method
-    Reference:
-        "Design Patterns: Elements of Reusable Object-Oriented Software",
-         pages: 325 - 330
+    Class that subclasses base.Toolbox and is used as a base class for other
+    Genetic Algorithm implementations
     '''
     # constructor
     def __init__(self, population, generations, funcname, fitfunc, evalfunc,
                  args=(), indidividual_attrs=(), repeat_func=1):
+        # call super class constructor
+        base.Toolbox.__init__(self)
+
+        # store creator method
+        self.create = creator.create
 
         # meta programming
         self._init_data(population, generations)
@@ -92,7 +94,6 @@ class GenAlgo(object):
         '''
         # initialize data
         data = (
-            'self.toolbox = base.Toolbox()\n'
             'self.psize = {0}\n'
             'self.gensize = {1}\n'
         ).format(pop, gen)
@@ -107,8 +108,8 @@ class GenAlgo(object):
         '''
         # creating simulations individual
         individuals = (
-            'creator.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
-            'creator.create(\'Individual\', list, fitness=creator.FitMax,\n'
+            'self.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
+            'self.create(\'Individual\', list, fitness=creator.FitMax,\n'
             '               *{0})\n'
         ).format(attrs)
 
@@ -122,12 +123,12 @@ class GenAlgo(object):
         '''
         # register functions
         functions = (
-            'self.toolbox.register(\'{0}\', {1}, *{2})\n'
-            'self.toolbox.register(\'individual\', tools.initRepeat,\n'
+            'self.register(\'{0}\', {1}, *{2})\n'
+            'self.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
-            '                      self.toolbox.{0}, {3})\n'
-            'self.toolbox.register(\'population\', tools.initRepeat, list,\n'
-            '                      self.toolbox.individual)\n'
+            '                      self.{0}, {3})\n'
+            'self.register(\'population\', tools.initRepeat, list,\n'
+            '                      self.individual)\n'
         ).format(funcname, fitfunc, args, repeat)
 
         # compile + execute
@@ -140,10 +141,10 @@ class GenAlgo(object):
         '''
         # register genetic operations
         genops = (
-            'self.toolbox.register(\'evaluate\', {0})\n'
-            'self.toolbox.register(\'mate\', tools.cxTwoPoint)\n'
-            'self.toolbox.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
-            'self.toolbox.register(\'select\', tools.selTournament,\n'
+            'self.register(\'evaluate\', {0})\n'
+            'self.register(\'mate\', tools.cxTwoPoint)\n'
+            'self.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
+            'self.register(\'select\', tools.selTournament,\n'
             '                      tournsize=3)\n'
         ).format(evalfunc)
 
@@ -160,13 +161,13 @@ class OneMax(GenAlgo):
     # constructor
     def __init__(self, pops, gens):
         # call base class constructor
-        # GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
-        #                  'self.evalOneMax', (0, 1), repeat_func=20)
+        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
+                         'self.evalOneMax', (0, 1), repeat_func=20)
 
-        self._init_data(pops, gens)
-        self._create_individuals(())
-        self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
-        self._register_genops('self.evalOneMax')
+        # self._init_data(pops, gens)
+        # self._create_individuals(())
+        # self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
+        # self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
         '''
@@ -179,10 +180,10 @@ class OneMax(GenAlgo):
         Function to run Genetic Algorithm.
         '''
         # initial population
-        pop = self.toolbox.population(self.psize)
+        pop = self.population(self.psize)
 
         # get fitnesses of population
-        fitnesses = list(map(self.toolbox.evaluate, pop))
+        fitnesses = list(map(self.evaluate, pop))
 
         # assign fitness to individual in population
         for ind, fit in zip(pop, fitnesses):
@@ -190,12 +191,12 @@ class OneMax(GenAlgo):
 
         # evolve population
         for g in range(self.gensize):
-            offspring = algorithms.varAnd(pop, self.toolbox, cxpb=0.5,
+            offspring = algorithms.varAnd(pop, self, cxpb=0.5,
                                           mutpb=0.1)
-            fits = self.toolbox.map(self.toolbox.evaluate, offspring)
+            fits = self.map(self.evaluate, offspring)
             for fit, ind in zip(fits, offspring):
                 ind.fitness.values = fit
-            pop = self.toolbox.select(offspring, k=len(pop))
+            pop = self.select(offspring, k=len(pop))
 
         # select top 10
         self.top_fittest(pop, 10)
