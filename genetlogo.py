@@ -38,6 +38,16 @@ class GeNetLogo(genalgo.GenAlgo, jvm.JVM):
         genalgo.GenAlgo.__init__(self, pops, gens, funcname, func, args,
                                  evalfunc)
 
+
+class INDISIMGenAlgo(GeNetLogo):
+    '''
+    Class to implement a Genetic Algorithm with JVM interface for the INDISIM
+    NetLogo model
+    '''
+    # constructor
+    def __init__(self):
+        pass
+
     # fitness evaluation function
     def eval_fit(self, individual):
         '''
