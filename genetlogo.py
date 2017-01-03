@@ -33,10 +33,11 @@ class GeNetLogo(genalgo.GenAlgo, jvm.JVM):
     Class to apply Genetic Algorithms to NetLogo simulations.
     '''
     # constructor
-    def __init__(self, pops, gens, funcname, func, args, evalfunc):
+    def __init__(self, pdict, prgpath, prgname):
         # call base class constructor
-        genalgo.GenAlgo.__init__(self, pops, gens, funcname, func, args,
-                                 evalfunc)
+        # genalgo.GenAlgo.__init__(self, pops, gens, funcname, func, args,
+        #                          evalfunc)
+        jvm.JVM.__init__(self, prgpath, prgname)
 
 
 class INDISIMGenAlgo(GeNetLogo):
@@ -46,6 +47,7 @@ class INDISIMGenAlgo(GeNetLogo):
     '''
     # constructor
     def __init__(self):
+        # NOTE: need to clarify what is unique to this class and what varies
         pass
 
     # fitness evaluation function
