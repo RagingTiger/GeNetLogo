@@ -79,7 +79,7 @@ class GenAlgo(base.Toolbox):
         # call super class constructor
         base.Toolbox.__init__(self)
 
-        # store creator method
+        # store creator method: first class functions
         self.create = creator.create
 
         # meta programming
