@@ -76,17 +76,25 @@ class GenAlgo(base.Toolbox):
     # constructor
     def __init__(self, population, generations, funcname, fitfunc, evalfunc,
                  args=(), indidividual_attrs=(), repeat_func=1):
-        # call super class constructor
-        base.Toolbox.__init__(self)
 
-        # store creator method: first class functions
-        self.create = creator.create
+        # init super class
+        self._superclass_init()
 
         # meta programming
         self._init_data(population, generations)
         self._create_individuals(indidividual_attrs)
         self._register_functions(funcname, fitfunc, args, repeat_func)
         self._register_genops(evalfunc)
+
+    def _superclass_init(self):
+        '''
+        Private method to initialize super class
+        '''
+        # call super class constructor
+        base.Toolbox.__init__(self)
+
+        # store creator method: first class functions
+        self.create = creator.create
 
     def _init_data(self, pop, gen):
         '''
@@ -161,13 +169,15 @@ class OneMax(GenAlgo):
     # constructor
     def __init__(self, pops, gens):
         # call base class constructor
-        GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
-                         'self.evalOneMax', (0, 1), repeat_func=20)
+        # GenAlgo.__init__(self, pops, gens, 'attr_bool', 'random.randint',
+        #                  'self.evalOneMax', (0, 1), repeat_func=20)
 
-        # self._init_data(pops, gens)
-        # self._create_individuals(())
-        # self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
-        # self._register_genops('self.evalOneMax')
+        # do not call super class constructor
+        self._superclass_init()
+        self._init_data(pops, gens)
+        self._create_individuals(())
+        self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
+        self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
         '''
