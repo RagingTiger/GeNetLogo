@@ -177,7 +177,7 @@ class OneMax(GenAlgo):
 
     def main(self):
         '''
-        Function to run Genetic Algorithm.
+        Function to run Onemax Genetic Algorithm.
         '''
         # initial population
         pop = self.population(self.psize)
