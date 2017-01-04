@@ -46,9 +46,11 @@ class INDISIMGenAlgo(GeNetLogo):
     NetLogo model
     '''
     # constructor
-    def __init__(self):
+    def __init__(self, prgpath, prgname):
         # NOTE: need to clarify what is unique to this class and what varies
-        pass
+        # call super class constructor
+        GeNetLogo.__init__(self, {}, prgpath, prgname)
+        self._superclass_init()
 
     # fitness evaluation function
     def eval_fit(self, individual):
@@ -73,4 +75,18 @@ if __name__ == '__main__':
     # control flow
     if args['test']:
 
-        ga = GeNetLogo()
+        # start JVM
+        with INDISIMGenAlgo(jvm.PRGPATH, jvm.PRGNAME) as indisim:
+
+            # register fitness function
+            indisim._init_data(10, 10)
+            indisim._create_individuals(())
+            indisim._register_functions('fitfunc', 'self.fitness_function',
+                                        jvm.TST_DICT, 1)
+            indisim._register_genops('self.eval_fit')
+
+            # run genetic algorithm
+            # NOTE: seems to be problem with 'freezing' arguments
+            #       might need to use closure to add params to a function
+            #       then pass those parameters to the fitness function?
+            indisim.main()
