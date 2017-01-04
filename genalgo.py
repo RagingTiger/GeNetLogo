@@ -56,18 +56,6 @@ class ArgError(Exception):
         return repr(self.value)
 
 
-class EvalFunc(object):
-    pass
-
-
-class FitFunc(object):
-    pass
-
-
-class IndividualAttrs(object):
-    pass
-
-
 class GenAlgo(base.Toolbox):
     '''
     Class that subclasses base.Toolbox and is used as a base class for other
