@@ -153,19 +153,19 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(individuals, '<string>', 'exec')
         exec compiled_setup
 
-    def _register_functions(self, funcname, fitfunc, args, repeat):
+    def _register_functions(self, fitfunc, args, repeat, vargs=False):
         '''
         Private method to register functions
         '''
         # register functions
         functions = (
-            'self.register(\'{0}\', {1}, *{2})\n'
+            'self.register(\'fitfunc\', {0}, {1}{2})\n'
             'self.register(\'individual\', tools.initRepeat,\n'
             '                      creator.Individual,\n'
-            '                      self.{0}, {3})\n'
+            '                      self.fitfunc, {3})\n'
             'self.register(\'population\', tools.initRepeat, list,\n'
             '                      self.individual)\n'
-        ).format(funcname, fitfunc, args, repeat)
+        ).format(fitfunc, '*' if vargs else '',  args, repeat)
 
         # compile + execute
         compiled_setup = compile(functions, '<string>', 'exec')
@@ -204,7 +204,7 @@ class OneMax(GenAlgo):
         self._superclass_init()
         self._init_data(pops, gens)
         self._create_individuals(())
-        self._register_functions('attr_bool', 'random.randint', (0, 1), 20)
+        self._register_functions('random.randint', (0, 1), 20, vargs=True)
         self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
