@@ -57,6 +57,7 @@ class INDISIMGenAlgo(GeNetLogo):
         '''
         Function to evaluate fitness of individuals for GeNetLogo applications.
         '''
+        # NOTE: Need to investigate properties of JavaArray object
         return sum(individual),
 
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
             # register fitness function
             indisim._init_data(10, 10)
             indisim._create_individuals(())
-            indisim._register_functions('fitfunc', 'self.fitness_function',
+            indisim._register_functions('self.fitness_function',
                                         jvm.TST_DICT, 1)
             indisim._register_genops('self.eval_fit')
 
