@@ -55,7 +55,7 @@ class JVM(object):
         self.command = ['java', '-classpath', prgpath, prgname]
 
     # functions
-    def print_fitness(self, params):
+    def _print_output(self, params):
 
         # get fit values
         for val in self._java_object.fitness_function(params):
@@ -76,7 +76,7 @@ class JVM(object):
 
         # get gateway entry point
         self._java_object = self._gateway.entry_point
-        self.fitness_function = self._java_object.fitness_function
+        self.run_java_code = self._java_object.fitness_function
 
         # finally return self
         return self
@@ -110,4 +110,4 @@ if __name__ == '__main__':
         with JVM(PRGPATH, PRGNAME) as javacode:
 
             # run test
-            javacode.print_fitness(TST_DICT)
+            javacode._print_output(TST_DICT)
