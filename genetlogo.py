@@ -52,10 +52,24 @@ class INDISIMGenAlgo(GeNetLogo):
         GeNetLogo.__init__(self, {}, prgpath, prgname)
         self._superclass_init()
 
+    def create_individual(self, params, individual):
+        '''
+        Method to create individual, calculate the fitness values, and store
+        simulation parameters with it
+        '''
+        pass
+
+    def get_fitness(self, params):
+        '''
+        Method to call fitness_function on JVM NetLogo code and convert
+        JavaArray to a list
+        '''
+        return self.run_java_code(params)
+
     # fitness evaluation function
     def eval_fit(self, individual):
         '''
-        Function to evaluate fitness of individuals for GeNetLogo applications.
+        Function to evaluate fitness of individuals for GeNetLogo applications
         '''
         # NOTE: Need to investigate properties of JavaArray object
         return sum(individual),
@@ -82,7 +96,7 @@ if __name__ == '__main__':
             # register fitness function
             indisim._init_data(10, 10)
             indisim._create_individuals(())
-            indisim._register_functions('self.fitness_function',
+            indisim._register_functions('self.get_fitness',
                                         jvm.TST_DICT, 1)
             indisim._register_genops('self.eval_fit')
 
