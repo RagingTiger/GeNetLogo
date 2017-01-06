@@ -153,19 +153,19 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(individuals, '<string>', 'exec')
         exec compiled_setup
 
-    def _register_functions(self, fitfunc, args, repeat, vargs=False):
+    def _register_functions(self, fitfunc, indfunc, args, repeat, vargs=False):
         '''
         Private method to register functions
         '''
         # register functions
         functions = (
             'self.register(\'fitfunc\', {0}, {1}{2})\n'
-            'self.register(\'individual\', tools.initRepeat,\n'
+            'self.register(\'individual\', {3},\n'
             '                      creator.Individual,\n'
-            '                      self.fitfunc, {3})\n'
+            '                      self.fitfunc)\n'
             'self.register(\'population\', tools.initRepeat, list,\n'
             '                      self.individual)\n'
-        ).format(fitfunc, '*' if vargs else '',  args, repeat)
+        ).format(fitfunc, '*' if vargs else '', args, repeat)
 
         # compile + execute
         compiled_setup = compile(functions, '<string>', 'exec')
