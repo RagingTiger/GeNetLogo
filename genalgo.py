@@ -138,7 +138,7 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(data, '<string>', 'exec')
         exec compiled_setup
 
-    def _create_individuals(self, attrs):
+    def _create_individuals(self, attrs, vargs=False):
         '''
         Private method to create unique individuals
         '''
@@ -146,14 +146,15 @@ class GenAlgo(base.Toolbox):
         individuals = (
             'self.create(\'FitMax\', base.Fitness, weights=(1.0,))\n'
             'self.create(\'Individual\', list, fitness=creator.FitMax,\n'
-            '               *{0})\n'
-        ).format(attrs)
+            '               {1}{0})\n'
+        ).format(attrs, '*' if vargs else '')
 
         # compile + execute
         compiled_setup = compile(individuals, '<string>', 'exec')
         exec compiled_setup
 
-    def _register_functions(self, fitfunc, indfunc, args, repeat, vargs=False):
+    def _register_functions(self, fitfunc, args, indfunc, repeat=None,
+                            vargs=False):
         '''
         Private method to register functions
         '''
@@ -162,10 +163,11 @@ class GenAlgo(base.Toolbox):
             'self.register(\'fitfunc\', {0}, {1}{2})\n'
             'self.register(\'individual\', {3},\n'
             '                      creator.Individual,\n'
-            '                      self.fitfunc)\n'
+            '                      self.fitfunc, {4})\n'
             'self.register(\'population\', tools.initRepeat, list,\n'
             '                      self.individual)\n'
-        ).format(fitfunc, '*' if vargs else '', args, repeat)
+        ).format(fitfunc, '*' if vargs else '', args, indfunc,
+                 repeat if repeat else '')
 
         # compile + execute
         compiled_setup = compile(functions, '<string>', 'exec')
@@ -204,7 +206,8 @@ class OneMax(GenAlgo):
         self._superclass_init()
         self._init_data(pops, gens)
         self._create_individuals(())
-        self._register_functions('random.randint', (0, 1), 20, vargs=True)
+        self._register_functions('random.randint', (0, 1), 'tools.initRepeat',
+                                 20, vargs=True)
         self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
