@@ -52,12 +52,19 @@ class INDISIMGenAlgo(GeNetLogo):
         GeNetLogo.__init__(self, {}, prgpath, prgname)
         self._superclass_init()
 
-    def create_individual(self, params, individual):
+    def gen_individual(self, container, func):
         '''
         Method to create individual, calculate the fitness values, and store
         simulation parameters with it
         '''
-        pass
+        # first call initIterate
+        instance = genalgo.tools.initIterate(container, func)
+
+        # store parameters
+        instance.params = func.args
+
+        # return
+        return instance
 
     def get_fitness(self, params):
         '''
@@ -95,9 +102,9 @@ if __name__ == '__main__':
 
             # register fitness function
             indisim._init_data(10, 10)
-            indisim._create_individuals(())
+            indisim._create_individuals('params=dict')
             indisim._register_functions('self.get_fitness',
-                                        jvm.TST_DICT, 1)
+                                        jvm.TST_DICT, 'self.gen_individual')
             indisim._register_genops('self.eval_fit')
 
             # run genetic algorithm
