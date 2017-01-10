@@ -33,11 +33,14 @@ class GeNetLogo(genalgo.GenAlgo, jvm.JVM):
     Class to apply Genetic Algorithms to NetLogo simulations.
     '''
     # constructor
-    def __init__(self, pdict, prgpath, prgname):
+    def __init__(self, params, prgpath, prgname):
         # call base class constructor
         # genalgo.GenAlgo.__init__(self, pops, gens, funcname, func, args,
         #                          evalfunc)
         jvm.JVM.__init__(self, prgpath, prgname)
+
+        # store params object
+        self.parameter_ranges = genalgo.RandomParameters(params)
 
 
 class INDISIMGenAlgo(GeNetLogo):
@@ -46,10 +49,10 @@ class INDISIMGenAlgo(GeNetLogo):
     NetLogo model
     '''
     # constructor
-    def __init__(self, prgpath, prgname):
+    def __init__(self, params, prgpath, prgname):
         # NOTE: need to clarify what is unique to this class and what varies
         # call super class constructor
-        GeNetLogo.__init__(self, {}, prgpath, prgname)
+        GeNetLogo.__init__(self, params, prgpath, prgname)
         self._superclass_init()
 
     def gen_individual(self, container, func):
@@ -61,17 +64,21 @@ class INDISIMGenAlgo(GeNetLogo):
         instance = genalgo.tools.initIterate(container, func)
 
         # store parameters
-        instance.params = func.args
+        instance.params = self._rand_params
 
         # return
         return instance
 
-    def get_fitness(self, params):
+    def get_fitness(self):
         '''
         Method to call fitness_function on JVM NetLogo code and convert
         JavaArray to a list
         '''
-        return self.run_java_code(params)
+        # first store new randparams
+        self._rand_params = self.parameter_ranges.get_rparams()
+
+        # then get fitness/call JVM
+        return self.run_java_code(self._rand_params)
 
     # fitness evaluation function
     def eval_fit(self, individual):
@@ -98,13 +105,13 @@ if __name__ == '__main__':
     if args['test']:
 
         # start JVM
-        with INDISIMGenAlgo(jvm.PRGPATH, jvm.PRGNAME) as indisim:
+        with INDISIMGenAlgo(jvm.TST_DICT, jvm.PRGPATH, jvm.PRGNAME) as indisim:
 
             # register fitness function
             indisim._init_data(10, 10)
-            indisim._create_individuals('params=dict')
+            indisim._create_individuals('netlogo_params=dict')
             indisim._register_functions('self.get_fitness',
-                                        jvm.TST_DICT, 'self.gen_individual')
+                                        'self.gen_individual')
             indisim._register_genops('self.eval_fit')
 
             # run genetic algorithm
