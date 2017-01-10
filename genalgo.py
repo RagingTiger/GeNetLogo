@@ -230,7 +230,7 @@ class RandomParameters(object):
     def __init__(self, arg_dict):
 
         # generate attributes w/values
-        for key, val in self.arg_dict.iteritems():
+        for key, val in arg_dict.iteritems():
 
             # check type of elements
             if all(isinstance(item, int) or
