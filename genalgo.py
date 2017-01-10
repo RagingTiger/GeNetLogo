@@ -229,6 +229,18 @@ class RandomParameters(object):
     # constructor
     def __init__(self, arg_dict):
 
+        # generate attributes w/values
+        for key, val in self.arg_dict.iteritems():
+
+            # check type of elements
+            if all(isinstance(item, int) or
+               isinstance(item, float) for item in val):
+                # 10-4
+                pass
+            else:
+                raise TypeError('RandomParameters constructor takes dictionary'
+                                ' of parameters that can only be int or float')
+
         # store ranges
         self._range_dict = arg_dict
 
@@ -242,12 +254,11 @@ class RandomParameters(object):
         # generate attributes w/values
         for key, val in self._range_dict.iteritems():
 
-            # check type
-            if all(isinstance(item, int) or
-               isinstance(item, float) for item in val):
+            # check if val is list
+            if type(val) is list:
                 rval = random.uniform(val[0], val[1])
             else:
-                raise TypeError('Arguments can only be int or float')
+                rval = random.uniform(0, val)
 
             # add key/val
             rand_params[key] = float(rval)
