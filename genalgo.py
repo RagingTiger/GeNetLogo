@@ -138,7 +138,7 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(data, '<string>', 'exec')
         exec compiled_setup
 
-    def _create_individuals(self, attrs, vargs=False):
+    def _create_individuals(self, attrs='', vargs=False):
         '''
         Private method to create unique individuals
         '''
@@ -153,7 +153,7 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(individuals, '<string>', 'exec')
         exec compiled_setup
 
-    def _register_functions(self, fitfunc, args, indfunc, repeat=None,
+    def _register_functions(self, fitfunc, indfunc, args='', repeat=None,
                             vargs=False):
         '''
         Private method to register functions
@@ -205,9 +205,9 @@ class OneMax(GenAlgo):
         # do not call super class constructor
         self._superclass_init()
         self._init_data(pops, gens)
-        self._create_individuals(())
-        self._register_functions('random.randint', (0, 1), 'tools.initRepeat',
-                                 20, vargs=True)
+        self._create_individuals()
+        self._register_functions('random.randint', 'tools.initRepeat',
+                                 args=(0, 1), repeat=20, vargs=True)
         self._register_genops('self.evalOneMax')
 
     def evalOneMax(self, individual):
