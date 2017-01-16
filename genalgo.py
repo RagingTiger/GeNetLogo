@@ -91,8 +91,7 @@ class GenAlgo(base.Toolbox):
         # evolve population 'g' generations
         for g in range(self.gensize):
             # simply applies 'mate' and 'mutate' toolbox functions
-            offspring = algorithms.varAnd(pop, self, cxpb=0.5,
-                                          mutpb=0.1)
+            offspring = algorithms.varAnd(pop, self, cxpb=0.5, mutpb=0.1)
 
             # get fitness of offspring
             fits = self.map(self.evaluate, offspring)
