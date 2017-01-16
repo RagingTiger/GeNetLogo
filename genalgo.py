@@ -88,13 +88,18 @@ class GenAlgo(base.Toolbox):
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
 
-        # evolve population
+        # evolve population 'g' generations
         for g in range(self.gensize):
+            # crossover and mutate
             offspring = algorithms.varAnd(pop, self, cxpb=0.5,
                                           mutpb=0.1)
+
+            # get fitness of offspring
             fits = self.map(self.evaluate, offspring)
             for fit, ind in zip(fits, offspring):
                 ind.fitness.values = fit
+
+            # select from offspring
             pop = self.select(offspring, k=len(pop))
 
         # select top 10
