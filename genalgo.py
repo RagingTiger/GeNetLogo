@@ -90,7 +90,7 @@ class GenAlgo(base.Toolbox):
 
         # evolve population 'g' generations
         for g in range(self.gensize):
-            # crossover and mutate
+            # simply applies 'mate' and 'mutate' toolbox functions
             offspring = algorithms.varAnd(pop, self, cxpb=0.5,
                                           mutpb=0.1)
 
