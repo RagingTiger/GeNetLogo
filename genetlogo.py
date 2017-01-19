@@ -83,10 +83,22 @@ class INDISIMGenAlgo(GeNetLogo):
     # fitness evaluation function
     def eval_fit(self, individual):
         '''
-        Function to evaluate fitness of individuals for GeNetLogo applications
+        Method to evaluate fitness of individuals for GeNetLogo applications
         '''
         # NOTE: Need to investigate properties of JavaArray object
         return sum(individual),
+
+    def _mating(self, ind1, ind2):
+        '''
+        Private method to mate two 'dict' object individuals
+        '''
+        pass
+
+    def _mutating(self, individual):
+        '''
+        Private method to mutate an individual
+        '''
+        pass
 
 
 # executable
