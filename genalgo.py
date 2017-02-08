@@ -74,7 +74,7 @@ class GenAlgo(base.Toolbox):
         self._register_functions(funcname, fitfunc, args, repeat_func)
         self._register_genops(evalfunc)
 
-    def main(self):
+    def main(self, func=None):
         '''
         Function to run Genetic Algorithm.
         '''
@@ -92,6 +92,10 @@ class GenAlgo(base.Toolbox):
         for g in range(self.gensize):
             # simply applies 'mate' and 'mutate' toolbox functions
             offspring = algorithms.varAnd(pop, self, cxpb=0.5, mutpb=0.1)
+
+            # check for func
+            if func:
+                func()
 
             # get fitness of offspring
             fits = self.map(self.evaluate, offspring)
