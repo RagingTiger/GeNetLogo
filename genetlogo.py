@@ -92,13 +92,33 @@ class INDISIMGenAlgo(GeNetLogo):
         '''
         Private method to mate two 'dict' object individuals
         '''
-        pass
+        # take percentage of fitnesses
+        total = float(ind1.fitness.values) + float(ind2.fitness.values)
+
+        # get individual percents
+        perc1 = float(ind1.fitness.values) / total
+        perc2 = float(ind2.fitness.values) / total
+
+        # get dict keys
+        keys = [key for key in ind1.params.iterkeys()]
+
+        # now create child
 
     def _mutating(self, individual):
         '''
         Private method to mutate an individual
         '''
         pass
+
+    def _reval_fitness(self, population):
+        '''
+        Private method to evaluate fitness of multiple sequence types
+        '''
+        # iterate through population
+        for ind in population:
+
+            # first call evalfit
+            pass
 
 
 # executable
