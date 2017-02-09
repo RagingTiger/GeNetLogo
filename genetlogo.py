@@ -55,6 +55,12 @@ class INDISIMGenAlgo(GeNetLogo):
         GeNetLogo.__init__(self, params, prgpath, prgname)
         self._superclass_init()
 
+    def main(self):
+        '''
+        Method for implementing actual genetic algorithm
+        '''
+        pass
+
     def gen_individual(self, container, func):
         '''
         Method to create individual, calculate the fitness values, and store
@@ -99,10 +105,15 @@ class INDISIMGenAlgo(GeNetLogo):
         perc1 = float(ind1.fitness.values) / total
         perc2 = float(ind2.fitness.values) / total
 
+        # get parant dicts
+        d1 = ind1.params
+        d2 = ind2.params
+
         # get dict keys
         keys = [key for key in ind1.params.iterkeys()]
 
         # now create child
+        return {key: (perc1 * d1[key]) + perc2 * d2[key] for key in key}
 
     def _mutating(self, individual):
         '''
@@ -117,8 +128,12 @@ class INDISIMGenAlgo(GeNetLogo):
         # iterate through population
         for ind in population:
 
+            # closure
+            def closure():
+                return self.run_java_code(ind.params)
+
             # first call evalfit
-            pass
+            genalgo.tools.initIterate(container, closure)
 
 
 # executable
@@ -150,4 +165,4 @@ if __name__ == '__main__':
             # NOTE: seems to be problem with 'freezing' arguments
             #       might need to use closure to add params to a function
             #       then pass those parameters to the fitness function?
-            indisim.main()
+            indisim.main(func=indisim._reval_fitness)
