@@ -74,54 +74,6 @@ class GenAlgo(base.Toolbox):
         self._register_functions(funcname, fitfunc, args, repeat_func)
         self._register_genops(evalfunc)
 
-    def main(self, func=None):
-        '''
-        Function to run Genetic Algorithm.
-        '''
-        # initial population
-        pop = self.population(self.psize)
-
-        # get fitnesses of population
-        fitnesses = list(map(self.evaluate, pop))
-
-        # assign fitness to individual in population
-        for ind, fit in zip(pop, fitnesses):
-            ind.fitness.values = fit
-
-        # evolve population 'g' generations
-        for g in range(self.gensize):
-            # simply applies 'mate' and 'mutate' toolbox functions
-            offspring = algorithms.varAnd(pop, self, cxpb=0.5, mutpb=0.1)
-
-            # check for func
-            if func:
-                func()
-
-            # get fitness of offspring
-            fits = self.map(self.evaluate, offspring)
-            for fit, ind in zip(fits, offspring):
-                ind.fitness.values = fit
-
-            # select from offspring
-            pop = self.select(offspring, k=len(pop))
-
-        # select top 10
-        self.top_fittest(pop, 10)
-
-    def top_fittest(self, pop, levels):
-        '''
-        Function to print out the top most fit individuals in the population.
-        '''
-        # print out banner
-        print 'Top {0} Most Fit Inviduals in Population:'.format(levels)
-
-        # print out ranked individuals
-        for i, ind in enumerate(tools.selBest(pop, k=levels)):
-            space = ' '*(4-len(str(i+1)))
-            print ' #{0}{2}Individual: {1}'.format(i+1, ind, space)
-            print '{2}  {0}   - Fitness: {1}'.format(space, ind.fitness.values,
-                                                     ' '*len(str(i+1)))
-
     def _superclass_init(self):
         '''
         Private method to initialize super class
@@ -217,6 +169,54 @@ class OneMax(GenAlgo):
         self._register_functions('random.randint', 'tools.initRepeat',
                                  args=(0, 1), repeat=20, vargs=True)
         self._register_genops('self.evalOneMax')
+
+    def main(self, func=None):
+        '''
+        Function to run OneMax Algorithm.
+        '''
+        # initial population
+        pop = self.population(self.psize)
+
+        # get fitnesses of population
+        fitnesses = list(map(self.evaluate, pop))
+
+        # assign fitness to individual in population
+        for ind, fit in zip(pop, fitnesses):
+            ind.fitness.values = fit
+
+        # evolve population 'g' generations
+        for g in range(self.gensize):
+            # simply applies 'mate' and 'mutate' toolbox functions
+            offspring = algorithms.varAnd(pop, self, cxpb=0.5, mutpb=0.1)
+
+            # check for func
+            if func:
+                func()
+
+            # get fitness of offspring
+            fits = self.map(self.evaluate, offspring)
+            for fit, ind in zip(fits, offspring):
+                ind.fitness.values = fit
+
+            # select from offspring
+            pop = self.select(offspring, k=len(pop))
+
+        # select top 10
+        self.top_fittest(pop, 10)
+
+    def top_fittest(self, pop, levels):
+        '''
+        Function to print out the top most fit individuals in the population.
+        '''
+        # print out banner
+        print 'Top {0} Most Fit Inviduals in Population:'.format(levels)
+
+        # print out ranked individuals
+        for i, ind in enumerate(tools.selBest(pop, k=levels)):
+            space = ' '*(4-len(str(i+1)))
+            print ' #{0}{2}Individual: {1}'.format(i+1, ind, space)
+            print '{2}  {0}   - Fitness: {1}'.format(space, ind.fitness.values,
+                                                     ' '*len(str(i+1)))
 
     def evalOneMax(self, individual):
         '''
