@@ -55,11 +55,37 @@ class INDISIMGenAlgo(GeNetLogo):
         GeNetLogo.__init__(self, params, prgpath, prgname)
         self._superclass_init()
 
-    def main(self):
+    def main(self, func=None):
         '''
-        Method for implementing actual genetic algorithm
+        Function to run OneMax Algorithm.
         '''
-        pass
+        # initial population
+        pop = self.population(self.psize)
+
+        # get fitnesses of population
+        fitnesses = list(map(self.evaluate, pop))
+
+        # assign fitness to individual in population
+        for ind, fit in zip(pop, fitnesses):
+            ind.fitness.values = fit
+
+        # evolve population 'g' generations
+        for g in range(self.gensize):
+            # simply applies 'mate' and 'mutate' toolbox functions
+            offspring = genalgo.algorithms.varAnd(pop, self, cxpb=0.5,
+                                                  mutpb=0.1)
+
+            # check for func
+            if func:
+                func(offspring)
+
+            # get fitness of offspring
+            fits = self.map(self.evaluate, offspring)
+            for fit, ind in zip(fits, offspring):
+                ind.fitness.values = fit
+
+            # select from offspring
+            pop = self.select(offspring, k=len(pop))
 
     def gen_individual(self, container, func):
         '''
@@ -99,21 +125,31 @@ class INDISIMGenAlgo(GeNetLogo):
         Private method to mate two 'dict' object individuals
         '''
         # take percentage of fitnesses
-        total = float(ind1.fitness.values) + float(ind2.fitness.values)
+        total = float(ind1.fitness.values[0]) + float(ind2.fitness.values[0])
 
-        # get individual percents
-        perc1 = float(ind1.fitness.values) / total
-        perc2 = float(ind2.fitness.values) / total
+        # check if not zero
+        if total:
+            # get individual percents
+            perc1 = float(ind1.fitness.values[0]) / total
+            perc2 = float(ind2.fitness.values[0]) / total
 
-        # get parant dicts
-        d1 = ind1.params
-        d2 = ind2.params
+            # get parant dicts
+            d1 = ind1.params
+            d2 = ind2.params
 
-        # get dict keys
-        keys = [key for key in ind1.params.iterkeys()]
+            # get dict keys
+            keys = [key for key in ind1.params.iterkeys()]
 
-        # now create child
-        return {key: (perc1 * d1[key]) + perc2 * d2[key] for key in key}
+            # now create child params
+            ch1 = {key: (perc1 * d1[key]) + (perc2 * d2[key]) for key in keys}
+            ch2 = {key: (perc2 * d1[key]) + (perc1 * d2[key]) for key in keys}
+
+            # now store on individuals
+            ind1.params = ch1
+            ind2.params = ch2
+
+        # now birth them
+        return ind1, ind2
 
     def _mutating(self, individual):
         '''
@@ -133,7 +169,7 @@ class INDISIMGenAlgo(GeNetLogo):
                 return self.run_java_code(ind.params)
 
             # first call evalfit
-            genalgo.tools.initIterate(container, closure)
+            genalgo.tools.initIterate(ind, closure)
 
 
 # executable
@@ -159,7 +195,7 @@ if __name__ == '__main__':
             indisim._create_individuals('netlogo_params=dict')
             indisim._register_functions('self.get_fitness',
                                         'self.gen_individual')
-            indisim._register_genops('self.eval_fit')
+            indisim._register_genops('self.eval_fit', 'self._mating')
 
             # run genetic algorithm
             # NOTE: seems to be problem with 'freezing' arguments

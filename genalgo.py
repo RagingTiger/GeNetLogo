@@ -133,18 +133,18 @@ class GenAlgo(base.Toolbox):
         compiled_setup = compile(functions, '<string>', 'exec')
         exec compiled_setup
 
-    def _register_genops(self, evalfunc):
+    def _register_genops(self, evalfunc, mating):
         '''
         Private method to register genetic operations
         '''
         # register genetic operations
         genops = (
             'self.register(\'evaluate\', {0})\n'
-            'self.register(\'mate\', tools.cxTwoPoint)\n'
+            'self.register(\'mate\', {1})\n'
             'self.register(\'mutate\', tools.mutFlipBit, indpb=0.05)\n'
             'self.register(\'select\', tools.selTournament,\n'
             '                      tournsize=3)\n'
-        ).format(evalfunc)
+        ).format(evalfunc, mating)
 
         # compile + execute
         compiled_setup = compile(genops, '<string>', 'exec')
@@ -168,7 +168,7 @@ class OneMax(GenAlgo):
         self._create_individuals()
         self._register_functions('random.randint', 'tools.initRepeat',
                                  args=(0, 1), repeat=20, vargs=True)
-        self._register_genops('self.evalOneMax')
+        self._register_genops('self.evalOneMax', 'tools.cxTwoPoint')
 
     def main(self, func=None):
         '''
@@ -191,7 +191,7 @@ class OneMax(GenAlgo):
 
             # check for func
             if func:
-                func()
+                func(offspring)
 
             # get fitness of offspring
             fits = self.map(self.evaluate, offspring)
